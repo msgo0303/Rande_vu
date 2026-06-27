@@ -1,0 +1,814 @@
+<html lang="ko" class="scroll-smooth" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">북두칠성 Archive - The Big Dipper Club</title>
+    
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet" vid="7">
+    
+    
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    
+    <script vid="9">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        void: '#030305',
+                    },
+                    letterSpacing: {
+                        'celestial': '0.25em',
+                    },
+                    animation: {
+                        'float': 'float 8s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out 4s infinite',
+                        'pulse-glow': 'pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'spin-reverse-slow': 'spin-reverse 15s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(1.5deg)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: 1, filter: 'brightness(1)' },
+                            '50%': { opacity: 0.8, filter: 'brightness(1.5) drop-shadow(0 0 10px rgba(255,255,255,0.8))' },
+                        },
+                        'spin-reverse': {
+                            '0%': { transform: 'rotate(360deg)' },
+                            '100%': { transform: 'rotate(0deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style vid="10">
+        
+        .text-glow-celestial {
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 20px rgba(147, 51, 234, 0.6);
+        }
+        
+        .nebula-text {
+            background: linear-gradient(to right, #22d3ee, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        
+        .constellation-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-out forwards;
+            animation-delay: 1s;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-void text-white font-sans overflow-x-hidden selection:bg-purple-500/30" vid="11">
+
+    
+    <div id="canvas-container" class="fixed inset-0 z-0 pointer-events-none opacity-60"></div>
+
+    
+    <div id="app-container" class="relative z-10 w-full min-h-screen backdrop-blur-md filter blur-[12px] opacity-0 transition-all duration-[3000ms] ease-out" vid="13">
+        
+        
+        <section class="w-full h-screen relative flex flex-col items-center justify-center overflow-hidden" vid="14">
+            
+            
+            <div class="relative w-full max-w-2xl aspect-video animate-float flex items-center justify-center" vid="15">
+                <svg viewBox="0 0 500 300" class="w-full h-full drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" vid="16">
+                    
+                    <g class="constellation-line" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round" vid="17">
+                        
+                        <path d="M 50 200 L 120 160" vid="18"></path>
+                        <path d="M 120 160 L 200 130" vid="19"></path>
+                        <path d="M 200 130 L 280 140" vid="20"></path>
+                        
+                        <path d="M 280 140 L 320 220" vid="21"></path>
+                        <path d="M 320 220 L 420 200" vid="22"></path>
+                        <path d="M 420 200 L 400 90" vid="23"></path>
+                        <path d="M 400 90 L 280 140" vid="24"></path>
+                    </g>
+                    
+                    
+                    <g fill="#ffffff" vid="25">
+                        
+                        <circle cx="50" cy="200" r="4" class="animate-pulse-glow" style="animation-delay: 0.1s" vid="26"></circle>
+                        
+                        <circle cx="120" cy="160" r="5" class="animate-pulse-glow" style="animation-delay: 0.3s" vid="27"></circle>
+                        <circle cx="125" cy="155" r="2" fill="rgba(255,255,255,0.6)" vid="28"></circle>
+                        
+                        <circle cx="200" cy="130" r="4.5" class="animate-pulse-glow" style="animation-delay: 0.5s" vid="29"></circle>
+                        
+                        <circle cx="280" cy="140" r="3.5" class="animate-pulse-glow" style="animation-delay: 0.7s" vid="30"></circle>
+                        
+                        <circle cx="320" cy="220" r="4" class="animate-pulse-glow" style="animation-delay: 0.9s" vid="31"></circle>
+                        
+                        <circle cx="420" cy="200" r="4.5" class="animate-pulse-glow" style="animation-delay: 1.1s" vid="32"></circle>
+                        
+                        <circle cx="400" cy="90" r="6" class="animate-pulse-glow" style="animation-delay: 1.3s" vid="33"></circle>
+                    </g>
+                </svg>
+            </div>
+
+            
+            <div class="mt-8 flex flex-col items-center transform translate-y-8 opacity-0 transition-all duration-1000 delay-[2000ms] ease-out" id="hero-text" vid="34">
+                <div class="flex items-center gap-6" vid="35">
+                    
+                    <svg class="w-4 h-4 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24" vid="36"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" vid="37"></path></svg>
+                    
+                    <h1 class="text-4xl md:text-6xl font-bold font-serif text-white tracking-celestial uppercase text-glow-celestial leading-none text-center" vid="38">
+                        북두칠성<br class="md:hidden" vid="39"><span class="text-3xl md:text-5xl" vid="40"> Archive</span>
+                    </h1>
+                    
+                    
+                    <svg class="w-4 h-4 text-white animate-pulse delay-75" fill="currentColor" viewBox="0 0 24 24" vid="41"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" vid="42"></path></svg>
+                </div>
+                
+                <h2 class="mt-6 text-xs md:text-sm font-bold tracking-[0.4em] uppercase nebula-text" vid="43">
+                    Chronicles of the Dipper
+                </h2>
+            </div>
+            
+            
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce" vid="44">
+                <span class="text-[10px] tracking-widest uppercase text-white/50" vid="45">Scroll</span>
+                <svg class="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="46"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" vid="47"></path></svg>
+            </div>
+        </section>
+
+        
+        <section class="w-full relative bg-gradient-to-b from-transparent to-black/50 py-32" vid="48">
+            <div class="max-w-4xl mx-auto px-6 flex flex-col items-center reveal-on-scroll" vid="49">
+                
+                
+                <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(99,102,241,0.1)] relative group" vid="50">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-cyan-500/20 mix-blend-overlay z-10" vid="51"></div>
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&amp;fit=crop&amp;q=80&amp;w=2070" alt="Starry night gathering" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out" vid="52">
+                    <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl z-20" vid="53"></div>
+                </div>
+
+                
+                <div class="mt-16 text-center flex flex-col items-center max-w-2xl" vid="54">
+                    <div class="flex items-center gap-4 mb-6" vid="55">
+                        <div class="h-[1px] w-12 bg-white/30" vid="56"></div>
+                        <span class="font-serif tracking-widest text-sm text-white/60 uppercase" vid="57">Identity</span>
+                        <div class="h-[1px] w-12 bg-white/30" vid="58"></div>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-medium tracking-wide text-white/90 leading-tight mb-8" vid="59">
+                        우리는 밤하늘 아래 모여<br vid="60">끝없는 이야기의 우주를 탐험합니다.
+                    </h3>
+                    <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light" vid="61">
+                        북두칠성은 매 기수마다 7명의 별이 모여 하나의 책을 깊이 있게 읽고, 서로의 생각과 철학을 나누는 프라이빗 독서 클럽입니다. 어두운 밤하늘 속에서도 변함없이 빛나는 북두칠성처럼, 우리는 혼란스러운 세상 속에서 변하지 않는 가치를 활자 속에서 찾아갑니다. 이곳은 우리가 함께 만들어온 지적인 여정의 기록 보관소입니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="w-full py-32 relative overflow-hidden" vid="62">
+            <div class="max-w-6xl mx-auto px-6 relative z-10" vid="63">
+                <div class="text-center mb-20 reveal-on-scroll" vid="64">
+                    <h2 class="font-serif tracking-celestial text-3xl md:text-4xl text-white uppercase text-glow-celestial" vid="65">
+                        Celestial Achievements
+                    </h2>
+                    <h3 class="mt-4 text-xs font-bold tracking-[0.3em] uppercase nebula-text" vid="66">
+                        빛나는 기록들
+                    </h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8" vid="67">
+                    <!-- Star 1: Neon Cyan -->
+                    <div class="flex flex-col items-center text-center reveal-on-scroll" vid="68">
+                        <div class="relative w-24 h-24 mb-8 group cursor-default" vid="69">
+                            <div class="absolute inset-0 bg-cyan-400/30 rounded-full blur-2xl group-hover:bg-cyan-400/50 transition-all duration-500" vid="70"></div>
+                            <div class="absolute inset-0 animate-float" vid="71">
+                                <svg class="w-full h-full text-cyan-300 drop-shadow-[0_0_20px_rgba(34,211,238,0.8)]" viewBox="0 0 100 100" fill="currentColor" vid="72">
+                                    <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40" vid="73"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-5xl md:text-6xl font-bold font-serif tracking-tight bg-gradient-to-b from-white to-cyan-400 bg-clip-text text-transparent mb-3" vid="74">
+                            120+
+                        </div>
+                        <div class="text-sm text-cyan-300/80 tracking-widest uppercase mb-2" vid="75">Active Stars</div>
+                        <div class="text-xs text-gray-500 font-light" vid="76">함께했던 동아리원</div>
+                    </div>
+
+                    <!-- Star 2: Magenta -->
+                    <div class="flex flex-col items-center text-center reveal-on-scroll" vid="77">
+                        <div class="relative w-24 h-24 mb-8 group cursor-default" vid="78">
+                            <div class="absolute inset-0 bg-fuchsia-500/30 rounded-full blur-2xl group-hover:bg-fuchsia-500/50 transition-all duration-500" vid="79"></div>
+                            <div class="absolute inset-0 animate-float-delayed" vid="80">
+                                <svg class="w-full h-full text-fuchsia-400 drop-shadow-[0_0_20px_rgba(232,121,249,0.8)]" viewBox="0 0 100 100" fill="currentColor" vid="81">
+                                    <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40" vid="82"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-5xl md:text-6xl font-bold font-serif tracking-tight bg-gradient-to-b from-white to-fuchsia-500 bg-clip-text text-transparent mb-3" vid="83">
+                            3
+                        </div>
+                        <div class="text-sm text-fuchsia-400/80 tracking-widest uppercase mb-2" vid="84">Selected Projects</div>
+                        <div class="text-xs text-gray-500 font-light" vid="85">시·도청 지원사업 채택</div>
+                    </div>
+
+                    <!-- Star 3: Pastel Mint -->
+                    <div class="flex flex-col items-center text-center reveal-on-scroll" vid="86">
+                        <div class="relative w-24 h-24 mb-8 group cursor-default" vid="87">
+                            <div class="absolute inset-0 bg-emerald-400/30 rounded-full blur-2xl group-hover:bg-emerald-400/50 transition-all duration-500" vid="88"></div>
+                            <div class="absolute inset-0 animate-float" vid="89">
+                                <svg class="w-full h-full text-emerald-300 drop-shadow-[0_0_20px_rgba(52,211,153,0.8)]" viewBox="0 0 100 100" fill="currentColor" vid="90">
+                                    <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40" vid="91"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-5xl md:text-6xl font-bold font-serif tracking-tight bg-gradient-to-b from-white to-emerald-400 bg-clip-text text-transparent mb-3" vid="92">
+                            6
+                        </div>
+                        <div class="text-sm text-emerald-300/80 tracking-widest uppercase mb-2" vid="93">Generations Closed</div>
+                        <div class="text-xs text-gray-500 font-light" vid="94">완료 기수</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="w-full py-32 relative overflow-hidden" vid="95">
+            
+            <div class="text-center mb-32 reveal-on-scroll" vid="96">
+                <h2 class="font-serif tracking-celestial text-3xl md:text-4xl text-white uppercase text-glow-celestial" vid="97">
+                    Archives
+                </h2>
+                <h3 class="mt-4 text-xs font-bold tracking-[0.3em] uppercase nebula-text" vid="98">
+                    기수별 기록 탐색
+                </h3>
+            </div>
+
+            
+            <div class="max-w-5xl mx-auto px-6 relative" vid="99">
+                
+                <div class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent -translate-x-1/2" vid="100"></div>
+
+                
+                <div class="flex flex-col gap-32 relative z-10" vid="101">
+                    
+                    
+                    <div class="flex items-center justify-between w-full reveal-on-scroll" vid="102">
+                        <div class="w-5/12 text-right pr-12" vid="103">
+                            <span class="block text-cyan-400 font-serif tracking-widest text-lg mb-2" vid="104">Gen 1.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="105">창립의 별</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="106">첫 번째 독서 모임의 기록과 시작의 순간들.</p>
+                        </div>
+                        <div class="relative flex items-center justify-center w-12 h-12" vid="107">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('1기 창립의 별', '2023.03 - 2023.08', 'cyan')" vid="108">
+                                <div class="absolute inset-0 bg-cyan-400/20 rounded-full blur-xl group-hover:bg-cyan-400/40 transition-all duration-500" vid="109"></div>
+                                <div class="w-4 h-4 bg-cyan-200 rounded-full shadow-[0_0_20px_#22d3ee] group-hover:scale-150 transition-transform duration-300" vid="110"></div>
+                            </div>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="111">
+                            <div class="flex items-center gap-3" vid="112">
+                                <span class="text-sm font-mono text-white/40 tracking-widest" vid="113">23.03.15</span>
+                                <span class="px-2 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-[10px] text-cyan-300 tracking-widest uppercase animate-pulse" vid="114">Click!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-center justify-between w-full flex-row-reverse reveal-on-scroll" vid="115">
+                        <div class="w-5/12 text-left pl-12" vid="116">
+                            <span class="block text-purple-400 font-serif tracking-widest text-lg mb-2" vid="117">Gen 2.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="118">심연의 탐구자</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="119">철학과 인문학, 깊은 사유의 시간들.</p>
+                        </div>
+                        <div class="relative flex items-center justify-center w-12 h-12" vid="120">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('2기 심연의 탐구자', '2023.09 - 2024.02', 'purple')" vid="121">
+                                <div class="absolute inset-0 bg-purple-400/20 rounded-full blur-xl group-hover:bg-purple-400/40 transition-all duration-500" vid="122"></div>
+                                <div class="w-4 h-4 bg-purple-200 rounded-full shadow-[0_0_20px_#a855f7] group-hover:scale-150 transition-transform duration-300" vid="123"></div>
+                            </div>
+                        </div>
+                        <div class="w-5/12 pr-12 flex items-center justify-end" vid="124">
+                            <div class="flex items-center gap-3" vid="125">
+                                <span class="px-2 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-[10px] text-purple-300 tracking-widest uppercase animate-pulse" vid="126">Click!</span>
+                                <span class="text-sm font-mono text-white/40 tracking-widest" vid="127">23.09.02</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-center justify-between w-full reveal-on-scroll" vid="128">
+                        <div class="w-5/12 text-right pr-12" vid="129">
+                            <span class="block text-pink-400 font-serif tracking-widest text-lg mb-2" vid="130">Gen 3.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="131">은하수 여행자</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="132">문학과 예술, 아름다움을 논하던 밤.</p>
+                        </div>
+                        <div class="relative flex items-center justify-center w-12 h-12" vid="133">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('3기 은하수 여행자', '2024.03 - 2024.08', 'pink')" vid="134">
+                                <div class="absolute inset-0 bg-pink-400/20 rounded-full blur-xl group-hover:bg-pink-400/40 transition-all duration-500" vid="135"></div>
+                                <div class="w-4 h-4 bg-pink-200 rounded-full shadow-[0_0_20px_#ec4899] group-hover:scale-150 transition-transform duration-300" vid="136"></div>
+                            </div>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="137">
+                            <div class="flex items-center gap-3" vid="138">
+                                <span class="text-sm font-mono text-white/40 tracking-widest" vid="139">24.03.10</span>
+                                <span class="px-2 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-[10px] text-pink-300 tracking-widest uppercase animate-pulse" vid="140">Click!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-center justify-between w-full flex-row-reverse reveal-on-scroll" vid="141">
+                        <div class="w-5/12 text-left pl-12" vid="142">
+                            <span class="block text-emerald-400 font-serif tracking-widest text-lg mb-2" vid="143">Gen 4.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="144">새로운 궤도</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="145">과학과 미래, 패러다임의 전환을 읽다.</p>
+                        </div>
+                        <div class="relative flex items-center justify-center w-12 h-12" vid="146">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('4기 새로운 궤도', '2024.09 - 현재', 'emerald')" vid="147">
+                                <div class="absolute inset-0 bg-emerald-400/20 rounded-full blur-xl group-hover:bg-emerald-400/40 transition-all duration-500" vid="148"></div>
+                                <div class="w-4 h-4 bg-emerald-200 rounded-full shadow-[0_0_20px_#10b981] group-hover:scale-150 transition-transform duration-300" vid="149"></div>
+                            </div>
+                        </div>
+                        <div class="w-5/12 pr-12 flex items-center justify-end" vid="150">
+                            <div class="flex items-center gap-3" vid="151">
+                                <span class="px-2 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-[10px] text-emerald-300 tracking-widest uppercase animate-pulse" vid="152">Click!</span>
+                                <span class="text-sm font-mono text-white/40 tracking-widest" vid="153">24.09.15</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-center justify-between w-full reveal-on-scroll" vid="154">
+                        <div class="w-5/12 text-right pr-12" vid="155">
+                            <span class="block text-blue-400 font-serif tracking-widest text-lg mb-2" vid="156">Gen 5.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="157">별의 고동</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="158">역사와 사회, 시대를 관통하는 시선.</p>
+                        </div>
+                        <div class="relative flex items-center justify-center w-12 h-12" vid="159">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('5기 별의 고동', '예정', 'blue')" vid="160">
+                                <div class="absolute inset-0 bg-blue-400/20 rounded-full blur-xl group-hover:bg-blue-400/40 transition-all duration-500" vid="161"></div>
+                                <div class="w-4 h-4 bg-blue-200 rounded-full shadow-[0_0_20px_#3b82f6] group-hover:scale-150 transition-transform duration-300" vid="162"></div>
+                            </div>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="163">
+                            <div class="flex items-center gap-3" vid="164">
+                                <span class="text-sm font-mono text-white/40 tracking-widest" vid="165">TBA</span>
+                                <span class="px-2 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-[10px] text-blue-300 tracking-widest uppercase animate-pulse" vid="166">Click!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="flex items-center justify-between w-full flex-row-reverse reveal-on-scroll" vid="167">
+                        <div class="w-5/12 text-left pl-12" vid="168">
+                            <span class="block text-rose-400 font-serif tracking-widest text-lg mb-2" vid="169">Gen 6.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="170">미지의 성운</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="171">분야를 넘나드는 융합적 읽기의 시도.</p>
+                        </div>
+                        <div class="relative flex items-center justify-center w-12 h-12" vid="172">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('6기 미지의 성운', '예정', 'rose')" vid="173">
+                                <div class="absolute inset-0 bg-rose-400/20 rounded-full blur-xl group-hover:bg-rose-400/40 transition-all duration-500" vid="174"></div>
+                                <div class="w-4 h-4 bg-rose-200 rounded-full shadow-[0_0_20px_#f43f5e] group-hover:scale-150 transition-transform duration-300" vid="175"></div>
+                            </div>
+                        </div>
+                        <div class="w-5/12 pr-12 flex items-center justify-end" vid="176">
+                            <div class="flex items-center gap-3" vid="177">
+                                <span class="px-2 py-1 rounded-full border border-rose-500/30 bg-rose-500/10 text-[10px] text-rose-300 tracking-widest uppercase animate-pulse" vid="178">Click!</span>
+                                <span class="text-sm font-mono text-white/40 tracking-widest" vid="179">TBA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="w-full py-40 border-t border-white/5 bg-gradient-to-t from-indigo-950/20 to-transparent relative overflow-hidden flex flex-col items-center justify-center reveal-on-scroll" vid="180">
+            
+            
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-[100px] pointer-events-none" vid="181"></div>
+
+            <h2 class="text-xl md:text-3xl font-medium tracking-wide text-center text-white/90 mb-20 relative z-10 text-shadow-sm" vid="182">
+                우리와 함께 새로운 별을 쏘아 올릴 사람을 찾습니다.
+            </h2>
+
+            
+            <button onclick="openApplyModal()" class="group relative flex flex-col items-center justify-center z-10 focus:outline-none" vid="183">
+                <div class="relative w-24 h-24 flex items-center justify-center" vid="184">
+                    
+                    <svg class="absolute inset-0 w-full h-full text-indigo-500/30 animate-spin-slow group-hover:text-indigo-400/60 transition-colors duration-500" viewBox="0 0 100 100" vid="185">
+                        <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 8" vid="186"></circle>
+                    </svg>
+                    
+                    
+                    <svg class="absolute w-16 h-16 text-cyan-400/50 animate-spin-reverse-slow group-hover:text-cyan-300 transition-colors duration-500 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]" viewBox="0 0 100 100" vid="187">
+                        <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40" fill="none" stroke="currentColor" stroke-width="2" vid="188"></polygon>
+                    </svg>
+
+                    
+                    <div class="absolute w-4 h-4 bg-white rounded-full shadow-[0_0_30px_#fff] group-hover:scale-125 transition-transform duration-300" vid="189"></div>
+                </div>
+                
+                <span class="mt-8 text-sm md:text-base font-serif tracking-widest text-gray-400 group-hover:text-white group-hover:text-glow-celestial transition-all duration-300 uppercase" vid="190">
+                    신청서 작성하기
+                </span>
+            </button>
+        </section>
+
+        
+        <footer class="w-full py-8 border-t border-white/5 text-center flex flex-col items-center" vid="191">
+            <svg class="w-6 h-6 text-white/20 mb-4" viewBox="0 0 24 24" fill="currentColor" vid="192">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="193"></path>
+            </svg>
+            <p class="text-xs text-white/30 tracking-widest font-mono" vid="194">© 2024 THE BIG DIPPER ARCHIVE. ALL RIGHTS RESERVED.</p>
+        </footer>
+
+    </div>
+
+    
+    <div id="archive-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex justify-center items-center z-50 transition-all duration-500 opacity-0 pointer-events-none" vid="195">
+        
+        
+        <div class="bg-zinc-900/90 border border-white/10 w-[90%] md:w-[700px] h-[80vh] md:h-[70vh] rounded-2xl p-8 md:p-12 overflow-y-auto relative transform scale-95 transition-transform duration-500" id="archive-modal-content" vid="196">
+            
+            
+            <button onclick="closeArchiveModal()" class="absolute top-6 right-6 text-white/40 hover:text-white transition-colors p-2 z-10 focus:outline-none" vid="197">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="198"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" vid="199"></path></svg>
+            </button>
+
+            
+            <div class="border-b border-white/10 pb-8 mb-8 text-center mt-4" vid="200">
+                <span id="modal-date" class="text-xs font-mono tracking-widest text-gray-500 uppercase block mb-3" vid="201">2023.03 - 2023.08</span>
+                <h2 id="modal-title" class="text-3xl font-serif text-white tracking-widest mb-2" vid="202">창립의 별</h2>
+                <div class="w-12 h-[1px] bg-current mx-auto mt-6 opacity-30" id="modal-color-line" vid="203"></div>
+            </div>
+
+            
+            <div class="space-y-12" vid="204">
+                
+                <div class="space-y-4" vid="205">
+                    <h3 class="text-sm tracking-widest text-white/60 uppercase flex items-center gap-2" vid="206">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="207"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" vid="208"></path></svg>
+                        Reading List
+                    </h3>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4" vid="209">
+                        <li class="bg-white/5 border border-white/5 p-4 rounded-lg flex gap-4 items-center" vid="210">
+                            <div class="w-12 h-16 bg-gray-800 rounded flex-shrink-0 flex items-center justify-center border border-white/10 text-xs text-white/30 font-serif" vid="211">Book</div>
+                            <div vid="212">
+                                <h4 class="text-sm font-medium text-white/90" vid="213">데미안</h4>
+                                <p class="text-xs text-gray-500 mt-1" vid="214">헤르만 헤세</p>
+                            </div>
+                        </li>
+                        <li class="bg-white/5 border border-white/5 p-4 rounded-lg flex gap-4 items-center" vid="215">
+                            <div class="w-12 h-16 bg-gray-800 rounded flex-shrink-0 flex items-center justify-center border border-white/10 text-xs text-white/30 font-serif" vid="216">Book</div>
+                            <div vid="217">
+                                <h4 class="text-sm font-medium text-white/90" vid="218">참을 수 없는 존재의 가벼움</h4>
+                                <p class="text-xs text-gray-500 mt-1" vid="219">밀란 쿤데라</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                
+                <div class="space-y-4" vid="220">
+                    <h3 class="text-sm tracking-widest text-white/60 uppercase flex items-center gap-2" vid="221">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="222"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" vid="223"></path></svg>
+                        Memories
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4" vid="224">
+                        <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden relative group" vid="225">
+                             <img src="https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&amp;fit=crop&amp;q=80&amp;w=600" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" alt="Gathering" vid="226">
+                        </div>
+                        <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden relative group" vid="227">
+                             <img src="https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&amp;fit=crop&amp;q=80&amp;w=600" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" alt="Discussion" vid="228">
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="space-y-4" vid="229">
+                    <h3 class="text-sm tracking-widest text-white/60 uppercase flex items-center gap-2" vid="230">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="231"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" vid="232"></path></svg>
+                        Journal Entry
+                    </h3>
+                    <div class="bg-black/30 rounded-xl p-6 border border-white/5 relative" vid="233">
+                        <svg class="absolute top-4 left-4 w-6 h-6 text-white/10" fill="currentColor" viewBox="0 0 24 24" vid="234"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" vid="235"></path></svg>
+                        <p class="text-sm text-gray-300 leading-relaxed font-light pl-8 relative z-10" vid="236">
+                            처음 모였던 날의 어색함은 첫 번째 책을 덮을 때 즈음 완전히 사라졌다. 각자의 우주가 충돌하고 융합하며 만들어낸 새로운 생각의 성운들이 우리를 더 넓은 세계로 이끌었다. 완벽하게 이해할 수는 없어도, 기꺼이 들어주려 했던 그 밤들의 기록.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="apply-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl flex justify-center items-center z-50 transition-all duration-500 opacity-0 pointer-events-none" vid="237">
+        
+        <div class="bg-void border border-white/10 w-[90%] md:w-[500px] rounded-2xl p-8 relative transform translate-y-8 transition-transform duration-500" id="apply-modal-content" vid="238">
+            
+            <button onclick="closeApplyModal()" class="absolute top-6 right-6 text-white/40 hover:text-white transition-colors p-2 focus:outline-none" vid="239">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="240"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" vid="241"></path></svg>
+            </button>
+
+            <div class="text-center mb-8 mt-2" vid="242">
+                <svg class="w-8 h-8 text-white mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="243"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" vid="244"></path></svg>
+                <h2 class="text-2xl font-serif text-white tracking-widest" vid="245">JOIN THE DIPPER</h2>
+                <p class="text-xs text-gray-500 mt-2 font-light" vid="246">새로운 별자리의 일원이 되어주세요.</p>
+            </div>
+
+            <form class="space-y-6" onsubmit="event.preventDefault(); alert('신청이 임시 완료되었습니다. (데모)'); closeApplyModal();" vid="247">
+<div vid="248">
+                    <label class="block text-xs text-white/60 uppercase tracking-widest mb-2" vid="249">Name</label>
+                    <input type="text" required="" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-colors placeholder-white/20" placeholder="이름을 입력해주세요" vid="250">
+                </div>
+                <div vid="251">
+                    <label class="block text-xs text-white/60 uppercase tracking-widest mb-2" vid="252">Contact</label>
+                    <input type="email" required="" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-colors placeholder-white/20" placeholder="연락받으실 이메일" vid="253">
+                </div>
+                <div vid="254">
+                    <label class="block text-xs text-white/60 uppercase tracking-widest mb-2" vid="255">Reason for applying</label>
+                    <textarea required="" rows="4" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-colors placeholder-white/20 resize-none" placeholder="지원 동기를 자유롭게 적어주세요" vid="256"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-4 text-sm tracking-wide" vid="257">
+                    신청서 제출
+                </button>
+            </form>
+        </div>
+    </div>
+
+    
+    <script vid="258">
+        const initThreeJS = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1500;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i++) {
+                
+                posArray[i] = (Math.random() - 0.5) * 20; 
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 16;
+            canvas.height = 16;
+            const context = canvas.getContext('2d');
+            const gradient = context.createRadialGradient(8, 8, 0, 8, 8, 8);
+            gradient.addColorStop(0, 'rgba(255,255,255,1)');
+            gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 16, 16);
+            const particleTexture = new THREE.CanvasTexture(canvas);
+
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                map: particleTexture,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                color: 0x88ccff 
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, material);
+            scene.add(particlesMesh);
+
+            camera.position.z = 5;
+
+            
+            let mouseX = 0;
+            let mouseY = 0;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = event.clientX / window.innerWidth - 0.5;
+                mouseY = event.clientY / window.innerHeight - 0.5;
+            });
+
+            const clock = new THREE.Clock();
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+                
+                particlesMesh.rotation.y = elapsedTime * 0.02;
+                particlesMesh.rotation.x = elapsedTime * 0.01;
+
+                
+                camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+            
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        initThreeJS();
+
+        
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const appContainer = document.getElementById('app-container');
+                const heroText = document.getElementById('hero-text');
+                
+                appContainer.classList.remove('opacity-0', 'blur-[12px]');
+                appContainer.classList.add('opacity-100', 'blur-none');
+
+                setTimeout(() => {
+                    heroText.classList.remove('opacity-0', 'translate-y-8');
+                }, 1000);
+            }, 500); 
+        });
+
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
+            observer.observe(el);
+        });
+
+        
+        const magnets = document.querySelectorAll('.magnet-star');
+        
+        magnets.forEach(magnet => {
+            magnet.addEventListener('mousemove', (e) => {
+                const rect = magnet.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                
+                magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+
+            magnet.addEventListener('mouseleave', () => {
+                magnet.style.transform = 'translate(0px, 0px)';
+                magnet.style.transition = 'transform 0.5s ease';
+            });
+            
+            magnet.addEventListener('mouseenter', () => {
+                magnet.style.transition = 'none'; 
+            });
+        });
+    </script>
+
+    
+    <script vid="259">
+        const body = document.body;
+        
+        
+        const colorMap = {
+            'cyan': 'text-cyan-400 border-cyan-400',
+            'purple': 'text-purple-400 border-purple-400',
+            'pink': 'text-pink-400 border-pink-400',
+            'emerald': 'text-emerald-400 border-emerald-400',
+            'blue': 'text-blue-400 border-blue-400',
+            'rose': 'text-rose-400 border-rose-400'
+        };
+
+        
+        function openArchiveModal(title, date, colorKey) {
+            const modal = document.getElementById('archive-modal');
+            const content = document.getElementById('archive-modal-content');
+            
+            
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-date').textContent = date;
+            
+            
+            const colorLine = document.getElementById('modal-color-line');
+            colorLine.className = 'w-12 h-[2px] mx-auto mt-6 ' + colorMap[colorKey].split(' ')[0].replace('text', 'bg');
+
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+            body.classList.add('modal-open');
+        }
+
+        function closeArchiveModal() {
+            const modal = document.getElementById('archive-modal');
+            const content = document.getElementById('archive-modal-content');
+            
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            content.classList.add('scale-95');
+            content.classList.remove('scale-100');
+            body.classList.remove('modal-open');
+        }
+
+        
+        function openApplyModal() {
+            const modal = document.getElementById('apply-modal');
+            const content = document.getElementById('apply-modal-content');
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            content.classList.remove('translate-y-8');
+            content.classList.add('translate-y-0');
+            body.classList.add('modal-open');
+        }
+
+        function closeApplyModal() {
+            const modal = document.getElementById('apply-modal');
+            const content = document.getElementById('apply-modal-content');
+            
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            content.classList.add('translate-y-8');
+            content.classList.remove('translate-y-0');
+            body.classList.remove('modal-open');
+        }
+
+        
+        window.addEventListener('click', (e) => {
+            const archiveModal = document.getElementById('archive-modal');
+            const applyModal = document.getElementById('apply-modal');
+            
+            if (e.target === archiveModal) {
+                closeArchiveModal();
+            }
+            if (e.target === applyModal) {
+                closeApplyModal();
+            }
+        });
+    </script>
+
+</body></html>
