@@ -112,6 +112,19 @@
         body.modal-open {
             overflow: hidden;
         }
+
+        .reveal-blur-on-scroll {
+            opacity: 0;
+            filter: blur(12px);
+            transform: translateY(20px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-blur-on-scroll.active {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -572,123 +585,141 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6" vid="100">
                     <!-- Gen 1 -->
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="101">
-                        <div class="flex items-center gap-3 mb-4" vid="102">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="103">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="104"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="105"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="101">
+                            <div class="flex items-center gap-3 mb-4" vid="102">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="103">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="104"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="105"></path></svg>
+                                </div>
+                                <div vid="106">
+                                    <div class="text-sm font-medium text-white" vid="107">별무리_01</div>
+                                    <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="108">Gen 1. 창립의 별</div>
+                                </div>
                             </div>
-                            <div vid="106">
-                                <div class="text-sm font-medium text-white" vid="107">별무리_01</div>
-                                <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="108">Gen 1. 창립의 별</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="109">"처음엔 낯설었지만, 책 한 권을 덮을 때쯤엔 저만의 작은 우주가 생긴 기분이었어요. 사막여우처럼 따뜻한 아지트였습니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="109">"처음엔 낯설었지만, 책 한 권을 덮을 때쯤엔 저만의 작은 우주가 생긴 기분이었어요. 사막여우처럼 따뜻한 아지트였습니다."</p>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="110">
-                        <div class="flex items-center gap-3 mb-4" vid="111">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="112">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="113"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="114"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="110">
+                            <div class="flex items-center gap-3 mb-4" vid="111">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="112">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="113"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="114"></path></svg>
+                                </div>
+                                <div vid="115">
+                                    <div class="text-sm font-medium text-white" vid="116">은하수_길잡이</div>
+                                    <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="117">Gen 1. 창립의 별</div>
+                                </div>
                             </div>
-                            <div vid="115">
-                                <div class="text-sm font-medium text-white" vid="116">은하수_길잡이</div>
-                                <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="117">Gen 1. 창립의 별</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="118">"혼자 읽을 때는 보이지 않던 활자 사이의 별빛들을 동료들의 눈을 통해 발견할 수 있었어요. 제 인생 최고의 독서 클럽입니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="118">"혼자 읽을 때는 보이지 않던 활자 사이의 별빛들을 동료들의 눈을 통해 발견할 수 있었어요. 제 인생 최고의 독서 클럽입니다."</p>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="119">
-                        <div class="flex items-center gap-3 mb-4" vid="120">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="121">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="122"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="123"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="119">
+                            <div class="flex items-center gap-3 mb-4" vid="120">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="121">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="122"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="123"></path></svg>
+                                </div>
+                                <div vid="124">
+                                    <div class="text-sm font-medium text-white" vid="125">밤하늘_여행자</div>
+                                    <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="126">Gen 1. 창립의 별</div>
+                                </div>
                             </div>
-                            <div vid="124">
-                                <div class="text-sm font-medium text-white" vid="125">밤하늘_여행자</div>
-                                <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="126">Gen 1. 창립의 별</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="127">"매주 밤하늘 아래 모여 나누던 낭만적인 대화들이 바쁜 일상 속에서 저를 지켜주는 가장 밝은 북극성이 되었습니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="127">"매주 밤하늘 아래 모여 나누던 낭만적인 대화들이 바쁜 일상 속에서 저를 지켜주는 가장 밝은 북극성이 되었습니다."</p>
                     </div>
 
                     <!-- Gen 2 -->
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="128">
-                        <div class="flex items-center gap-3 mb-4" vid="129">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="130">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="131"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="132"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="128">
+                            <div class="flex items-center gap-3 mb-4" vid="129">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="130">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="131"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="132"></path></svg>
+                                </div>
+                                <div vid="133">
+                                    <div class="text-sm font-medium text-white" vid="134">책방_지기</div>
+                                    <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="135">Gen 2. 심연의 탐구자</div>
+                                </div>
                             </div>
-                            <div vid="133">
-                                <div class="text-sm font-medium text-white" vid="134">책방_지기</div>
-                                <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="135">Gen 2. 심연의 탐구자</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="136">"철학과 인문학이라는 깊은 바다를 혼자가 아닌 7명의 별들과 함께 헤엄쳐서 외롭지 않았어요. 생각의 깊이가 달라졌습니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="136">"철학과 인문학이라는 깊은 바다를 혼자가 아닌 7명의 별들과 함께 헤엄쳐서 외롭지 않았어요. 생각의 깊이가 달라졌습니다."</p>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="137">
-                        <div class="flex items-center gap-3 mb-4" vid="138">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="139">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="140"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="141"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="137">
+                            <div class="flex items-center gap-3 mb-4" vid="138">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="139">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="140"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="141"></path></svg>
+                                </div>
+                                <div vid="142">
+                                    <div class="text-sm font-medium text-white" vid="143">활자_사냥꾼</div>
+                                    <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="144">Gen 2. 심연의 탐구자</div>
+                                </div>
                             </div>
-                            <div vid="142">
-                                <div class="text-sm font-medium text-white" vid="143">활자_사냥꾼</div>
-                                <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="144">Gen 2. 심연의 탐구자</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="145">"따뜻하고 귀여운 동화 같은 분위기 속에서, 가장 날카롭고 지적인 대화가 오가는 반전 매력을 가진 비밀 기지 같아요!"</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="145">"따뜻하고 귀여운 동화 같은 분위기 속에서, 가장 날카롭고 지적인 대화가 오가는 반전 매력을 가진 비밀 기지 같아요!"</p>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="146">
-                        <div class="flex items-center gap-3 mb-4" vid="147">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="148">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="149"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="150"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="146">
+                            <div class="flex items-center gap-3 mb-4" vid="147">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="148">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="149"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="150"></path></svg>
+                                </div>
+                                <div vid="151">
+                                    <div class="text-sm font-medium text-white" vid="152">사막의_우물</div>
+                                    <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="153">Gen 2. 심연의 탐구자</div>
+                                </div>
                             </div>
-                            <div vid="151">
-                                <div class="text-sm font-medium text-white" vid="152">사막의_우물</div>
-                                <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="153">Gen 2. 심연의 탐구자</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="154">"마치 어린 왕자가 장미를 만나러 가듯, 매주 설레는 마음으로 책을 펼쳤습니다. 지친 영혼에 물을 주는 시간이었습니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="154">"마치 어린 왕자가 장미를 만나러 가듯, 매주 설레는 마음으로 책을 펼쳤습니다. 지친 영혼에 물을 주는 시간이었습니다."</p>
                     </div>
 
                     <!-- Gen 3 -->
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="155">
-                        <div class="flex items-center gap-3 mb-4" vid="156">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="157">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="158"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="159"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="155">
+                            <div class="flex items-center gap-3 mb-4" vid="156">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="157">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="158"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="159"></path></svg>
+                                </div>
+                                <div vid="160">
+                                    <div class="text-sm font-medium text-white" vid="161">새벽_오로라</div>
+                                    <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="162">Gen 3. 은하수 여행자</div>
+                                </div>
                             </div>
-                            <div vid="160">
-                                <div class="text-sm font-medium text-white" vid="161">새벽_오로라</div>
-                                <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="162">Gen 3. 은하수 여행자</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="163">"문학과 예술을 논하던 그 수많은 밤들 덕분에 제 일상이 한 편의 일러스트 동화책처럼 다채로운 색감으로 물들었습니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="163">"문학과 예술을 논하던 그 수많은 밤들 덕분에 제 일상이 한 편의 일러스트 동화책처럼 다채로운 색감으로 물들었습니다."</p>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="164">
-                        <div class="flex items-center gap-3 mb-4" vid="165">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="166">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="167"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="168"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="164">
+                            <div class="flex items-center gap-3 mb-4" vid="165">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="166">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="167"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="168"></path></svg>
+                                </div>
+                                <div vid="169">
+                                    <div class="text-sm font-medium text-white" vid="170">행성_132</div>
+                                    <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="171">Gen 3. 은하수 여행자</div>
+                                </div>
                             </div>
-                            <div vid="169">
-                                <div class="text-sm font-medium text-white" vid="170">행성_132</div>
-                                <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="171">Gen 3. 은하수 여행자</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="172">"둥글둥글하고 다정한 사람들 사이에서 내 서툰 생각들을 마음껏 꺼내놓을 수 있는 가장 안전하고 아늑한 궤도였습니다."</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="172">"둥글둥글하고 다정한 사람들 사이에서 내 서툰 생각들을 마음껏 꺼내놓을 수 있는 가장 안전하고 아늑한 궤도였습니다."</p>
                     </div>
 
-                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="173">
-                        <div class="flex items-center gap-3 mb-4" vid="174">
-                            <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="175">
-                                <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="176"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="177"></path></svg>
+                    <div class="reveal-blur-on-scroll">
+                        <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group" vid="173">
+                            <div class="flex items-center gap-3 mb-4" vid="174">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors" vid="175">
+                                    <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24" vid="176"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" vid="177"></path></svg>
+                                </div>
+                                <div vid="178">
+                                    <div class="text-sm font-medium text-white" vid="179">코스모스</div>
+                                    <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="180">Gen 3. 은하수 여행자</div>
+                                </div>
                             </div>
-                            <div vid="178">
-                                <div class="text-sm font-medium text-white" vid="179">코스모스</div>
-                                <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="180">Gen 3. 은하수 여행자</div>
-                            </div>
+                            <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="181">"북두칠성 별자리가 연결되듯 우리들의 마음과 생각이 선으로 이어지던 순간의 전율을 아직도 잊을 수 없습니다. 강추해요!"</p>
                         </div>
-                        <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="181">"북두칠성 별자리가 연결되듯 우리들의 마음과 생각이 선으로 이어지던 순간의 전율을 아직도 잊을 수 없습니다. 강추해요!"</p>
                     </div>
                 </div>
             </div>
@@ -1093,6 +1124,21 @@
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
             observer.observe(el);
+        });
+
+        const blurObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-blur-on-scroll').forEach((el, index) => {
+            const delay = (index % 3) * 150;
+            el.style.transitionDelay = `${delay}ms`;
+            blurObserver.observe(el);
         });
 
 
