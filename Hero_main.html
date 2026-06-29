@@ -1,0 +1,1793 @@
+<html lang="ko" class="scroll-smooth" vid="0">
+
+<head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">북두칠성 Archive - The Big Dipper Club</title>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap"
+        rel="stylesheet" vid="7">
+
+
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+
+    <script vid="9">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        void: '#030305',
+                    },
+                    letterSpacing: {
+                        'celestial': '0.25em',
+                    },
+                    animation: {
+                        'float': 'float 8s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out 4s infinite',
+                        'pulse-glow': 'pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'spin-reverse-slow': 'spin-reverse 15s linear infinite',
+                        'spin-slow-reverse': 'spin-reverse 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(1.5deg)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: 1, filter: 'brightness(1)' },
+                            '50%': { opacity: 0.8, filter: 'brightness(1.5) drop-shadow(0 0 10px rgba(255,255,255,0.8))' },
+                        },
+                        'spin-reverse': {
+                            '0%': { transform: 'rotate(360deg)' },
+                            '100%': { transform: 'rotate(0deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style vid="10">
+        .text-glow-celestial {
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 20px rgba(147, 51, 234, 0.6);
+        }
+
+        .text-glow-subtle {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .nebula-text {
+            background: linear-gradient(to right, #22d3ee, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+
+        .constellation-line {
+            stroke: rgba(255, 255, 255, 0.4);
+            stroke-width: 1.5;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-in-out forwards 1s;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        .reveal-blur-on-scroll {
+            opacity: 0;
+            filter: blur(12px);
+            transform: translateY(20px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-blur-on-scroll.active {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .animate-slide-right {
+            animation: slideRight 1.5s ease-in-out infinite;
+        }
+
+        @keyframes slideRight {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* Volume Slider & Wave Visualizer Custom Styles */
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 60px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            border-radius: 9999px;
+            transition: all 0.3s;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+        }
+
+        @keyframes wave-bar {
+
+            0%,
+            100% {
+                height: 30%;
+            }
+
+            50% {
+                height: 100%;
+            }
+        }
+
+        #audio-wave.playing span:nth-child(1) {
+            animation: wave-bar 1.2s ease-in-out infinite;
+        }
+
+        #audio-wave.playing span:nth-child(2) {
+            animation: wave-bar 0.8s ease-in-out infinite;
+        }
+
+        #audio-wave.playing span:nth-child(3) {
+            animation: wave-bar 1.0s ease-in-out infinite;
+        }
+
+        #audio-wave.playing span:nth-child(4) {
+            animation: wave-bar 0.7s ease-in-out infinite;
+        }
+
+        #audio-wave.playing span:nth-child(5) {
+            animation: wave-bar 0.9s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-void text-white font-sans overflow-x-hidden selection:bg-purple-500/30" vid="11">
+
+    <!-- Floating Music Player -->
+    <div class="fixed top-6 right-6 z-50 flex items-center gap-4 bg-void/40 backdrop-blur-md rounded-full px-5 py-2.5 border border-white/10 shadow-lg shadow-purple-950/10 hover:border-white/20 transition-all duration-300"
+        id="music-player">
+        <audio id="bg-audio" src="bg_1.mp3" loop></audio>
+
+        <!-- Animated Wave (Constellation Vibe) -->
+        <div class="flex items-end gap-[3px] h-3.5 px-1 cursor-pointer" id="audio-wave" onclick="togglePlay()">
+            <span class="w-[1.5px] bg-white/70 rounded-full transition-all duration-300" style="height: 40%"></span>
+            <span class="w-[1.5px] bg-white/70 rounded-full transition-all duration-300" style="height: 70%"></span>
+            <span class="w-[1.5px] bg-white/70 rounded-full transition-all duration-300" style="height: 100%"></span>
+            <span class="w-[1.5px] bg-white/70 rounded-full transition-all duration-300" style="height: 60%"></span>
+            <span class="w-[1.5px] bg-white/70 rounded-full transition-all duration-300" style="height: 80%"></span>
+        </div>
+
+        <!-- Play/Pause Button -->
+        <button onclick="togglePlay()" class="text-white/70 hover:text-white transition-colors p-1" id="play-pause-btn"
+            title="재생">
+            <!-- Play Icon (Default) -->
+            <svg id="play-icon" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+            </svg>
+            <!-- Pause Icon (Hidden by default) -->
+            <svg id="pause-icon" class="w-4 h-4 fill-current hidden" viewBox="0 0 24 24">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+            </svg>
+        </button>
+
+        <!-- Volume Section -->
+        <div class="flex items-center gap-2">
+            <!-- Mute Toggle -->
+            <button onclick="toggleMute()" class="text-white/70 hover:text-white transition-colors p-1" id="mute-btn"
+                title="음소거">
+                <!-- Volume Up Icon (Default) -->
+                <svg id="volume-icon" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path
+                        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                </svg>
+                <!-- Volume Mute Icon (Hidden) -->
+                <svg id="mute-icon" class="w-4 h-4 fill-current hidden" viewBox="0 0 24 24">
+                    <path
+                        d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                </svg>
+            </button>
+
+            <!-- Sleek Slider -->
+            <input type="range" min="0" max="1" step="0.05" value="0.3" class="volume-slider" id="volume-slider"
+                oninput="changeVolume(this.value)">
+        </div>
+    </div>
+
+
+    <div id="canvas-container" class="fixed inset-0 z-0 pointer-events-none opacity-60"></div>
+
+
+    <div id="app-container" class="relative z-10 w-full min-h-screen transition-all duration-[1000ms] ease-out"
+        vid="13">
+
+
+        <section class="w-full h-screen relative flex flex-col items-center justify-center overflow-hidden" vid="14">
+
+            <div class="relative w-[300px] h-[300px] md:w-[600px] md:h-[400px] animate-float" vid="16">
+                <svg viewBox="0 0 600 400" class="w-full h-full overflow-visible" vid="17">
+                    <defs vid="18">
+                        <radialGradient id="starGlow" cx="50%" cy="50%" r="50%" vid="19">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="1" vid="20"></stop>
+                            <stop offset="30%" stop-color="#e9d5ff" stop-opacity="0.8" vid="21"></stop>
+                            <stop offset="100%" stop-color="#9333ea" stop-opacity="0" vid="22"></stop>
+                        </radialGradient>
+                    </defs>
+
+
+                    <path d="M100 280 L200 250 L280 260 L360 210 L350 110 L480 80 L520 180" fill="none"
+                        class="constellation-line" vid="23"></path>
+                    <line x1="360" y1="210" x2="520" y2="180" class="constellation-line" vid="24"></line>
+
+
+
+                    <g transform="translate(100, 280)" class="animate-pulse-glow text-blue-400" vid="25">
+                        <circle r="12" fill="url(#starGlow)" vid="26"></circle>
+                        <circle r="3" fill="currentColor" class="star-core" vid="27"></circle>
+                    </g>
+
+                    <g transform="translate(200, 250)" class="animate-pulse-glow text-purple-300"
+                        style="animation-delay: 0.2s" vid="28">
+                        <circle r="15" fill="url(#starGlow)" vid="29"></circle>
+                        <circle r="4" fill="currentColor" class="star-core" vid="30"></circle>
+                    </g>
+
+                    <g transform="translate(280, 260)" class="animate-pulse-glow text-pink-300"
+                        style="animation-delay: 0.4s" vid="31">
+                        <circle r="14" fill="url(#starGlow)" vid="32"></circle>
+                        <circle r="3.5" fill="currentColor" class="star-core" vid="33"></circle>
+                    </g>
+
+                    <g transform="translate(360, 210)" class="animate-pulse-glow text-indigo-400"
+                        style="animation-delay: 0.6s" vid="34">
+                        <circle r="10" fill="url(#starGlow)" vid="35"></circle>
+                        <circle r="2.5" fill="currentColor" class="star-core" vid="36"></circle>
+                    </g>
+
+                    <g transform="translate(350, 110)" class="animate-pulse-glow text-cyan-300"
+                        style="animation-delay: 0.8s" vid="37">
+                        <circle r="12" fill="url(#starGlow)" vid="38"></circle>
+                        <circle r="3" fill="currentColor" class="star-core" vid="39"></circle>
+                    </g>
+
+                    <g transform="translate(480, 80)" class="animate-pulse-glow text-white" style="animation-delay: 1s"
+                        vid="40">
+                        <circle r="18" fill="url(#starGlow)" vid="41"></circle>
+                        <circle r="5" fill="currentColor" class="star-core" vid="42"></circle>
+                    </g>
+
+                    <g transform="translate(520, 180)" class="animate-pulse-glow text-teal-300"
+                        style="animation-delay: 1.2s" vid="43">
+                        <circle r="16" fill="url(#starGlow)" vid="44"></circle>
+                        <circle r="4" fill="currentColor" class="star-core" vid="45"></circle>
+                    </g>
+                </svg>
+            </div>
+
+
+            <div class="mt-8 flex flex-col items-center transform translate-y-8 opacity-0 transition-all duration-1000 delay-[2000ms] ease-out"
+                id="hero-text" vid="34">
+                <!-- Mascot Image -->
+                <div class="w-28 h-28 md:w-40 md:h-40 mb-6 animate-float-delayed" vid="34-char">
+                    <img src="main_char_1.png" alt="Mascot Character" class="w-full h-full object-contain">
+                </div>
+
+                <div class="flex items-center gap-6" vid="35">
+
+                    <svg class="w-4 h-4 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24" vid="36">
+                        <path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" vid="37"></path>
+                    </svg>
+
+                    <h1 class="text-4xl md:text-6xl font-bold font-serif text-white tracking-celestial uppercase text-glow-celestial leading-none text-center"
+                        vid="38">
+                        북두칠성<br class="md:hidden" vid="39"><span class="text-3xl md:text-5xl" vid="40"> Archive</span>
+                    </h1>
+
+
+                    <svg class="w-4 h-4 text-white animate-pulse delay-75" fill="currentColor" viewBox="0 0 24 24"
+                        vid="41">
+                        <path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z" vid="42"></path>
+                    </svg>
+                </div>
+
+                <h2 class="mt-6 text-xs md:text-sm font-bold tracking-[0.4em] uppercase nebula-text" vid="43">
+                    Chronicles of the Dipper
+                </h2>
+            </div>
+
+
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-20" vid="44">
+                <div class="flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                    <span class="text-[10px] tracking-widest uppercase text-white/50" vid="45">Scroll</span>
+                    <svg class="w-4 h-4 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="46">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3" vid="47"></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="w-full relative bg-gradient-to-b from-transparent to-black/50 py-32" vid="48">
+            <div class="max-w-4xl mx-auto px-6 flex flex-col items-center reveal-on-scroll" vid="49">
+
+
+                <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(99,102,241,0.1)] relative group"
+                    vid="50">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-cyan-500/20 mix-blend-overlay z-10"
+                        vid="51"></div>
+                    <img src="MAIN_IMG1.jpg" alt="Starry night gathering"
+                        class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
+                        vid="52">
+                    <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl z-20" vid="53"></div>
+                </div>
+
+
+                <div class="mt-16 text-center flex flex-col items-center max-w-2xl" vid="54">
+                    <div class="flex items-center gap-4 mb-6" vid="55">
+                        <div class="h-[1px] w-12 bg-white/30" vid="56"></div>
+                        <span class="font-serif tracking-widest text-sm text-white/60 uppercase"
+                            vid="57">Identity</span>
+                        <div class="h-[1px] w-12 bg-white/30" vid="58"></div>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-medium tracking-wide text-white/90 leading-tight mb-8"
+                        vid="59">
+                        우리는 밤하늘 아래 모여<br vid="60">이야기라는 우주를 탐험합니다.
+                    </h3>
+                    <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light" vid="61">
+                        일주일 중 딱 1시간, 책(Book) Do(읽기)를 함께하는 대학 연합 동아리입니다. 공부를 위한 지루한 독서가 아니라, 책을 통해 자유롭게 대화하고 소통하는 따뜻한
+                        공간을 지향합니다. 변하지 않는 가치를 활자 속에서 찾아갑니다. 이곳은 우리가 함께 만들어온 지적인 여정의 기록 보관소입니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="w-full py-32 relative overflow-hidden" vid="62">
+            <div class="max-w-6xl mx-auto px-6 relative z-10" vid="63">
+                <div class="text-center mb-12 reveal-on-scroll" vid="64">
+                    <h2 class="font-serif tracking-celestial text-3xl md:text-4xl text-white uppercase text-glow-celestial"
+                        vid="65">
+                        Celestial Achievements
+                    </h2>
+                    <h3 class="mt-4 text-xs font-bold tracking-[0.3em] uppercase nebula-text" vid="66">
+                        빛나는 기록들
+                    </h3>
+                </div>
+
+                <!-- Mascot Character 2 -->
+                <div class="flex justify-center mb-12 reveal-on-scroll" vid="achievements-char">
+                    <div class="w-28 h-28 md:w-36 md:h-36 animate-float">
+                        <img src="main_char_2.png" alt="Mascot Character" class="w-full h-full object-contain">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8" vid="67">
+                    <!-- Star 1: Neon Cyan -->
+                    <div class="flex flex-col items-center text-center reveal-on-scroll" vid="68">
+                        <div class="relative w-24 h-24 mb-8 group cursor-default" vid="69">
+                            <div class="absolute inset-0 bg-cyan-400/30 rounded-full blur-2xl group-hover:bg-cyan-400/50 transition-all duration-500"
+                                vid="70"></div>
+                            <div class="absolute inset-0 animate-float" vid="71">
+                                <svg class="w-full h-full text-cyan-300 drop-shadow-[0_0_20px_rgba(34,211,238,0.8)]"
+                                    viewBox="0 0 100 100" fill="currentColor" vid="72">
+                                    <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40"
+                                        vid="73"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-5xl md:text-6xl font-bold font-serif tracking-tight bg-gradient-to-b from-white to-cyan-400 bg-clip-text text-transparent mb-3"
+                            vid="74">
+                            90+
+                        </div>
+                        <div class="text-sm text-cyan-300/80 tracking-widest uppercase mb-2" vid="75">함께했던 동아리원</div>
+                        <div class="text-xs text-gray-500 font-light" vid="76">Active Stars</div>
+                    </div>
+
+                    <!-- Star 2: Magenta -->
+                    <div class="flex flex-col items-center text-center reveal-on-scroll" vid="77">
+                        <div class="relative w-24 h-24 mb-8 group cursor-default" vid="78">
+                            <div class="absolute inset-0 bg-fuchsia-500/30 rounded-full blur-2xl group-hover:bg-fuchsia-500/50 transition-all duration-500"
+                                vid="79"></div>
+                            <div class="absolute inset-0 animate-float-delayed" vid="80">
+                                <svg class="w-full h-full text-fuchsia-400 drop-shadow-[0_0_20px_rgba(232,121,249,0.8)]"
+                                    viewBox="0 0 100 100" fill="currentColor" vid="81">
+                                    <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40"
+                                        vid="82"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-5xl md:text-6xl font-bold font-serif tracking-tight bg-gradient-to-b from-white to-fuchsia-500 bg-clip-text text-transparent mb-3"
+                            vid="83">
+                            2
+                        </div>
+                        <div class="text-sm text-fuchsia-400/80 tracking-widest uppercase mb-2" vid="84">시·도청 지원사업 채택
+                        </div>
+                        <div class="text-xs text-gray-500 font-light" vid="85">Selected Projects</div>
+                    </div>
+
+                    <!-- Star 3: Pastel Mint -->
+                    <div class="flex flex-col items-center text-center reveal-on-scroll" vid="86">
+                        <div class="relative w-24 h-24 mb-8 group cursor-default" vid="87">
+                            <div class="absolute inset-0 bg-emerald-400/30 rounded-full blur-2xl group-hover:bg-emerald-400/50 transition-all duration-500"
+                                vid="88"></div>
+                            <div class="absolute inset-0 animate-float" vid="89">
+                                <svg class="w-full h-full text-emerald-300 drop-shadow-[0_0_20px_rgba(52,211,153,0.8)]"
+                                    viewBox="0 0 100 100" fill="currentColor" vid="90">
+                                    <polygon points="50,5 61,40 98,40 68,62 79,95 50,75 21,95 32,62 2,40 39,40"
+                                        vid="91"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="text-5xl md:text-6xl font-bold font-serif tracking-tight bg-gradient-to-b from-white to-emerald-400 bg-clip-text text-transparent mb-3"
+                            vid="92">
+                            3
+                        </div>
+                        <div class="text-sm text-emerald-300/80 tracking-widest uppercase mb-2" vid="93">완료 기수</div>
+                        <div class="text-xs text-gray-500 font-light" vid="94">Generations Closed</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="w-full py-32 relative overflow-hidden" vid="95">
+
+            <div class="text-center mb-24 reveal-on-scroll" vid="96">
+                <h2 class="font-serif tracking-celestial text-3xl md:text-4xl text-white uppercase text-glow-celestial"
+                    vid="97">
+                    Archives
+                </h2>
+                <h3 class="mt-4 text-xs font-bold tracking-[0.3em] uppercase nebula-text mb-8" vid="98">
+                    기수별 기록 탐색
+                </h3>
+
+                <!-- Mascot Character 4 -->
+                <div class="flex justify-center" vid="archives-char">
+                    <div class="w-[94px] h-[94px] md:w-[125px] md:h-[125px] animate-float">
+                        <img src="main_char_4.png" alt="Mascot Character" class="w-full h-full object-contain">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="max-w-5xl mx-auto px-6 relative" vid="99">
+
+                <div class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent -translate-x-1/2"
+                    vid="100"></div>
+
+
+                <div class="flex flex-col gap-32 relative z-10" vid="101">
+
+
+                    <div class="flex items-center justify-between w-full reveal-on-scroll" vid="102">
+                        <div class="w-5/12 text-right pr-12" vid="103">
+                            <span class="block text-cyan-400 font-serif tracking-widest text-lg mb-2" vid="104">Gen
+                                1.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="105">알카이드</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="106">첫 번째 독서 모임의 기록과 시작의 순간들.</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="107">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen1')" vid="108">
+                                <div class="absolute inset-0 bg-cyan-400/20 rounded-full blur-xl group-hover:bg-cyan-400/40 transition-all duration-500"
+                                    vid="109"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-cyan-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="110">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-[9px] text-cyan-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="114">Click!</span>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="111">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="113">25.09.12</span>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center justify-between w-full flex-row-reverse reveal-on-scroll" vid="115">
+                        <div class="w-5/12 text-left pl-12" vid="116">
+                            <span class="block text-purple-400 font-serif tracking-widest text-lg mb-2" vid="117">Gen
+                                2.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="118">미자르</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="119">철학과 인문학, 깊은 사유의 시간들.</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="120">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen2')" vid="121">
+                                <div class="absolute inset-0 bg-purple-400/20 rounded-full blur-xl group-hover:bg-purple-400/40 transition-all duration-500"
+                                    vid="122"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-purple-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="123">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-[9px] text-purple-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="126">Click!</span>
+                        </div>
+                        <div class="w-5/12 pr-12 flex items-center justify-end" vid="124">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="127">25.12.28</span>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center justify-between w-full reveal-on-scroll" vid="128">
+                        <div class="w-5/12 text-right pr-12" vid="129">
+                            <span class="block text-pink-400 font-serif tracking-widest text-lg mb-2" vid="130">Gen
+                                3.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="131">알리오스</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="132">문학과 예술, 아름다움에 관해.</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="133">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen3')" vid="134">
+                                <div class="absolute inset-0 bg-pink-400/20 rounded-full blur-xl group-hover:bg-pink-400/40 transition-all duration-500"
+                                    vid="135"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-pink-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="136">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-[9px] text-pink-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="140">Click!</span>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="137">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="139">26.03.10</span>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center justify-between w-full flex-row-reverse reveal-on-scroll" vid="141">
+                        <div class="w-5/12 text-left pl-12" vid="142">
+                            <span class="block text-emerald-400 font-serif tracking-widest text-lg mb-2" vid="143">Gen
+                                4.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="144">메그레즈</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="145">미래와 자신에 대해서.</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="146">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen4')" vid="147">
+                                <div class="absolute inset-0 bg-emerald-400/20 rounded-full blur-xl group-hover:bg-emerald-400/40 transition-all duration-500"
+                                    vid="148"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-emerald-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="149">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-[9px] text-emerald-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="152">Click!</span>
+                        </div>
+                        <div class="w-5/12 pr-12 flex items-center justify-end" vid="150">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="153">26.06.25 ~</span>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center justify-between w-full reveal-on-scroll" vid="154">
+                        <div class="w-5/12 text-right pr-12" vid="155">
+                            <span class="block text-blue-400 font-serif tracking-widest text-lg mb-2" vid="156">Gen
+                                5.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="157">페크다</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="158">Coming Soon!</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="159">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen5')" vid="160">
+                                <div class="absolute inset-0 bg-blue-400/20 rounded-full blur-xl group-hover:bg-blue-400/40 transition-all duration-500"
+                                    vid="161"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-blue-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="162">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-[9px] text-blue-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="166">Click!</span>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="163">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="165">Soon</span>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center justify-between w-full flex-row-reverse reveal-on-scroll mt-12"
+                        vid="167">
+                        <div class="w-5/12 text-left pl-12" vid="168">
+                            <span class="block text-rose-400 font-serif tracking-widest text-lg mb-2" vid="169">Gen
+                                6.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="170">메라크</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="171">Coming Soon!</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="172">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen6')" vid="173">
+                                <div class="absolute inset-0 bg-rose-400/20 rounded-full blur-xl group-hover:bg-rose-400/40 transition-all duration-500"
+                                    vid="174"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-rose-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="175">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-rose-500/30 bg-rose-500/10 text-[9px] text-rose-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="178">Click!</span>
+                        </div>
+                        <div class="w-5/12 pr-12 flex items-center justify-end" vid="176">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="179">Soon</span>
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center justify-between w-full reveal-on-scroll mt-12" vid="180_new">
+                        <div class="w-5/12 text-right pr-12" vid="181_new">
+                            <span class="block text-amber-400 font-serif tracking-widest text-lg mb-2" vid="182_new">Gen
+                                7.</span>
+                            <h4 class="text-xl text-white font-medium mb-2" vid="183_new">두베</h4>
+                            <p class="text-xs text-gray-500 font-light" vid="184_new">마지막 별</p>
+                        </div>
+                        <div class="relative flex flex-col items-center justify-center w-12 h-12" vid="185_new">
+                            <div class="magnet-star cursor-pointer group" onclick="openArchiveModal('gen7')"
+                                vid="186_new">
+                                <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl group-hover:bg-amber-400/40 transition-all duration-500"
+                                    vid="187_new"></div>
+                                <svg width="56" height="56" viewBox="0 0 56 56"
+                                    class="text-amber-400 group-hover:scale-125 transition-transform duration-500 animate-pulse-glow"
+                                    vid="188_new">
+                                    <circle cx="28" cy="28" r="28" fill="currentColor" fill-opacity="0.1"></circle>
+                                    <circle cx="28" cy="28" r="14" fill="currentColor" fill-opacity="0.2"></circle>
+                                    <path d="M28 8L31.5 24.5L48 28L31.5 31.5L28 48L24.5 31.5L8 28L24.5 24.5L28 8Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </div>
+                            <span
+                                class="absolute -bottom-8 px-2 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-[9px] text-amber-300 tracking-widest uppercase animate-pulse whitespace-nowrap z-20"
+                                vid="189_new">Click!</span>
+                        </div>
+                        <div class="w-5/12 pl-12 flex items-center" vid="190_new">
+                            <span class="text-sm font-mono text-white/40 tracking-widest" vid="191_new">Soon</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full py-32 relative overflow-hidden" vid="95">
+            <div class="max-w-6xl mx-auto px-6 relative z-10" vid="96">
+                <div class="text-center mb-16 reveal-on-scroll" vid="97">
+                    <h2 class="font-serif tracking-celestial text-3xl md:text-4xl text-white uppercase text-glow-celestial"
+                        vid="98">
+                        Starlight Reviews
+                    </h2>
+                    <h3 class="mt-4 text-xs font-bold tracking-[0.3em] uppercase nebula-text mb-8" vid="99">
+                        동아리원들의 소리
+                    </h3>
+
+                    <!-- Mascot Character 3 -->
+                    <div class="flex justify-center mb-8" vid="reviews-char">
+                        <div class="w-36 h-36 md:w-48 md:h-48 animate-float-delayed">
+                            <img src="main_char_3.png" alt="Mascot Character" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+
+                    <!-- Mobile Scroll Indicator -->
+                    <div class="flex items-center justify-center gap-2 text-xs text-white/40 md:hidden animate-pulse"
+                        vid="scroll-guide">
+                        <span>옆으로 밀어서 더보기</span>
+                        <svg class="w-4 h-4 animate-slide-right" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            vid="scroll-arrow">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-x-visible pb-6 snap-x snap-mandatory scrollbar-hide"
+                    vid="100">
+                    <!-- Slide 1 (Gen 1) -->
+                    <div
+                        class="flex flex-col gap-6 flex-shrink-0 w-[85vw] sm:w-[350px] md:w-auto md:contents snap-center">
+                        <!-- Gen 1 Card 1 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="101">
+                                <div class="flex items-center gap-3 mb-4" vid="102">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="103">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="104">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="105"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="106">
+                                        <div class="text-sm font-medium text-white" vid="107">O민우(공과대학 2학년)</div>
+                                        <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="108">
+                                            GEN 1. 알카이드</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="109">"매주 주어지는
+                                    색다른 미션 덕분에 지루할 틈 없이 책 한 권을 소화할 수 있었어요. 혼자 읽을 때보다 성취감이 있고 흥미로웠습니다."</p>
+                            </div>
+                        </div>
+
+                        <!-- Gen 1 Card 2 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="110">
+                                <div class="flex items-center gap-3 mb-4" vid="111">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="112">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="113">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="114"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="115">
+                                        <div class="text-sm font-medium text-white" vid="116">O서연(사회과학대학 2학년)</div>
+                                        <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="117">
+                                            GEN 1. 알카이드</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="118">"7개의 독서 미션을
+                                    하나씩 깨는 재미가 있었어요. 미션을 수행하면서 자연스럽게 대화가 이어지니까 대화하기 어색했는데, 즐겁게 대화도 했던 것 같아요!"</p>
+                            </div>
+                        </div>
+
+                        <!-- Gen 1 Card 3 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="119">
+                                <div class="flex items-center gap-3 mb-4" vid="120">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="121">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="122">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="123"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="124">
+                                        <div class="text-sm font-medium text-white" vid="125">O준서(경영학과 3학년)</div>
+                                        <div class="text-[10px] text-cyan-400/80 tracking-widest uppercase" vid="126">
+                                            GEN 1. 알카이드</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="127">"책만 읽고 끝나는
+                                    게 아니라 서로 다른 학과의 사람들과 커뮤니케이션하면서 제 시야가 넓어졌어요. 오래 기억되는 독서가 될 것 같습니다."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 (Gen 2) -->
+                    <div
+                        class="flex flex-col gap-6 flex-shrink-0 w-[85vw] sm:w-[350px] md:w-auto md:contents snap-center">
+                        <!-- Gen 2 Card 1 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="128">
+                                <div class="flex items-center gap-3 mb-4" vid="129">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="130">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="131">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="132"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="133">
+                                        <div class="text-sm font-medium text-white" vid="134">O하은(디자인대학 4학년)</div>
+                                        <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="135">
+                                            GEN 2. 미자르</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="136">"마음 맞는 대학생
+                                    친구들과 책과 삶에 대해 소통할 수 있는 깊이있는 커뮤니티가 생긴 것 같아요. 커뮤니티 분위기가 따뜻해서 매번 힐링 받고 갑니다."</p>
+                            </div>
+                        </div>
+
+                        <!-- Gen 2 Card 2 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="137">
+                                <div class="flex items-center gap-3 mb-4" vid="138">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="139">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="140">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="141"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="142">
+                                        <div class="text-sm font-medium text-white" vid="143">O유리(사범대학 3학년)</div>
+                                        <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="144">
+                                            GEN 2. 미자르</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="145">"평소에 책 읽고
+                                    설명하는 걸 정말 좋아하는데, 여기서 제 생각을 말로 표현하고 의견을 주고받으면서 독서의 또다른 재미를 다시 느꼈어요."</p>
+                            </div>
+                        </div>
+
+                        <!-- Gen 2 Card 3 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="146">
+                                <div class="flex items-center gap-3 mb-4" vid="147">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="148">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="149">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="150"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="151">
+                                        <div class="text-sm font-medium text-white" vid="152">O도현 (인문대학 1학년)</div>
+                                        <div class="text-[10px] text-purple-400/80 tracking-widest uppercase" vid="153">
+                                            GEN 2. 미자르</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="154">"솔직히 처음에는
+                                    미션이 부담스러울 줄 알았는데, 오히려 책을 끝까지 읽는데 도움됐어요. 책에서 항상 흥미있는 부분만 읽고 넘겼는데, 독서의 재미를 느끼고 독서 습관이
+                                    생겼습니다."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 (Gen 3) -->
+                    <div
+                        class="flex flex-col gap-6 flex-shrink-0 w-[85vw] sm:w-[350px] md:w-auto md:contents snap-center">
+                        <!-- Gen 3 Card 1 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="155">
+                                <div class="flex items-center gap-3 mb-4" vid="156">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="157">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="158">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="159"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="160">
+                                        <div class="text-sm font-medium text-white" vid="161">O수아 (경영학과 4학년)</div>
+                                        <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="162">
+                                            GEN 3. 알리오스</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="163">"단순히 친목만
+                                    다지는 동아리가 아니라, 독서라는 확실한 중심축을 두고 체계적인 미션과 커뮤니케이션을 진행해서 얻어가는 게 정말 많습니다."</p>
+                            </div>
+                        </div>
+
+                        <!-- Gen 3 Card 2 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="164">
+                                <div class="flex items-center gap-3 mb-4" vid="165">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="166">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="167">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="168"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="169">
+                                        <div class="text-sm font-medium text-white" vid="170">O하은 (예술대학 2학년)</div>
+                                        <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="171">
+                                            GEN 3. 알리오스</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="172">"저는 혼자 책 읽을
+                                    때 보다, 같이 생각을 나누니까 훨씬 좋은 경험을 한 것 같아요! 나누니까 책에 대한 이해도도 높아지고 다방면으로 바라볼 수 있는 시야도 생기는 것
+                                    같구요 ㅎㅎ 성향이 잘 맞고 대화가 잘 통하는 분들과 함께해서 더 좋았던 것 같습니다"</p>
+                            </div>
+                        </div>
+
+                        <!-- Gen 3 Card 3 -->
+                        <div class="reveal-blur-on-scroll">
+                            <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/30 transition-all duration-300 group"
+                                vid="173">
+                                <div class="flex items-center gap-3 mb-4" vid="174">
+                                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors"
+                                        vid="175">
+                                        <svg class="w-5 h-5 text-white/40" fill="currentColor" viewBox="0 0 24 24"
+                                            vid="176">
+                                            <path
+                                                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                                                vid="177"></path>
+                                        </svg>
+                                    </div>
+                                    <div vid="178">
+                                        <div class="text-sm font-medium text-white" vid="179">O지민(간호학과 1학년)</div>
+                                        <div class="text-[10px] text-pink-400/80 tracking-widest uppercase" vid="180">
+                                            GEN 3. 알리오스</div>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="181">"워낙 낯을 많이
+                                    가려서 걱정했는데, 7가지 미션 가이드라인 덕분에 말을 꺼내기가 정말 편했어요. 타인의 생각을 경청하고 내 의견을 조리 있게 전달하는 법을
+                                    배웠습니다."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="w-full py-40 flex flex-col items-center justify-center border-t border-white/5 relative overflow-hidden reveal-on-scroll"
+            vid="151">
+
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none"
+                vid="152"></div>
+
+            <h2 class="text-xl md:text-3xl font-serif tracking-wide text-center text-white/90 mb-8 z-10 text-glow-subtle px-6"
+                vid="153">
+                우리와 함께 새로운 별을 쏘아 올릴 사람을 찾습니다.
+            </h2>
+
+            <!-- Mascot Character 5 -->
+            <div class="flex justify-center mb-12 z-10" vid="cta-char">
+                <div class="w-28 h-28 md:w-40 md:h-40 animate-float-delayed">
+                    <img src="main_char_5.png" alt="Mascot Character" class="w-full h-full object-contain">
+                </div>
+            </div>
+
+
+            <div class="relative group cursor-pointer" id="cta-trigger" onclick="openApplyModal()" vid="154">
+
+                <div class="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center animate-float"
+                    vid="155">
+
+                    <svg viewBox="0 0 100 100"
+                        class="absolute inset-0 w-full h-full text-indigo-500/30 animate-spin-slow group-hover:text-indigo-400/60 transition-colors duration-500"
+                        vid="156">
+                        <polygon points="50,0 60,35 100,35 65,55 80,95 50,75 20,95 35,55 0,35 40,35" fill="currentColor"
+                            vid="157"></polygon>
+                    </svg>
+
+                    <svg viewBox="0 0 100 100"
+                        class="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] text-purple-400/50 animate-spin-slow-reverse group-hover:text-purple-300/80 transition-colors duration-500"
+                        vid="158">
+                        <polygon points="50,5 65,40 95,50 65,60 50,95 35,60 5,50 35,40" fill="currentColor" vid="159">
+                        </polygon>
+                    </svg>
+
+                    <svg viewBox="0 0 100 100"
+                        class="absolute inset-8 w-[calc(100%-4rem)] h-[calc(100%-4rem)] text-white animate-pulse-glow group-hover:scale-110 transition-transform duration-500"
+                        vid="160">
+                        <path d="M50 0 L55 45 L100 50 L55 55 L50 100 L45 55 L0 50 L45 45 Z" fill="currentColor"
+                            vid="161"></path>
+                    </svg>
+
+                </div>
+
+
+                <div class="absolute -bottom-16 left-1/2 -translate-x-1/2 w-max" vid="162">
+                    <span
+                        class="nebula-text font-bold tracking-[0.2em] text-sm md:text-base uppercase group-hover:text-glow-celestial transition-all duration-300"
+                        vid="163">
+                        신청서 작성하기
+                    </span>
+                </div>
+            </div>
+        </section>
+
+
+        <footer class="w-full py-8 border-t border-white/5 text-center flex flex-col items-center" vid="191">
+            <svg class="w-6 h-6 text-white/20 mb-4" viewBox="0 0 24 24" fill="currentColor" vid="192">
+                <path
+                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                    vid="193"></path>
+            </svg>
+            <p class="text-xs text-white/30 tracking-widest font-mono" vid="194">© 2025 THE BIG DIPPER ARCHIVE. ALL
+                RIGHTS RESERVED.</p>
+        </footer>
+
+    </div>
+
+
+    <div id="archive-modal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-md flex justify-center items-center z-50 transition-all duration-500 opacity-0 pointer-events-none"
+        vid="195">
+
+
+        <div class="bg-zinc-900/90 border border-white/10 w-[90%] md:w-[700px] h-[80vh] md:h-[70vh] rounded-2xl p-8 md:p-12 overflow-y-auto relative transform scale-95 transition-transform duration-500"
+            id="archive-modal-content" vid="196">
+
+
+            <button onclick="closeArchiveModal()"
+                class="absolute top-6 right-6 text-white/40 hover:text-white transition-colors p-2 z-10 focus:outline-none"
+                vid="197">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="198">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"
+                        vid="199"></path>
+                </svg>
+            </button>
+
+
+            <div class="border-b border-white/10 pb-8 mb-8 text-center mt-4" vid="200">
+                <span id="modal-date" class="text-xs font-mono tracking-widest text-gray-500 uppercase block mb-3"
+                    vid="201">2023.03 - 2023.08</span>
+                <h2 id="modal-title" class="text-3xl font-serif text-white tracking-widest mb-2" vid="202">창립의 별</h2>
+                <div class="w-12 h-[1px] bg-current mx-auto mt-6 opacity-30" id="modal-color-line" vid="203"></div>
+            </div>
+
+
+            <div class="space-y-12" vid="204">
+
+                <div class="space-y-4" vid="205">
+                    <h3 class="text-sm tracking-widest text-white/60 uppercase flex items-center gap-2" vid="206">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="207">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                vid="208"></path>
+                        </svg>
+                        Reading List
+                    </h3>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4" id="modal-reading-list" vid="209">
+                        <li class="bg-white/5 border border-white/5 p-4 rounded-lg flex gap-4 items-center" vid="210">
+                            <div class="w-12 h-16 bg-gray-800 rounded flex-shrink-0 flex items-center justify-center border border-white/10 text-xs text-white/30 font-serif"
+                                vid="211">Book</div>
+                            <div vid="212">
+                                <h4 class="text-sm font-medium text-white/90" vid="213">데미안</h4>
+                                <p class="text-xs text-gray-500 mt-1" vid="214">헤르만 헤세</p>
+                            </div>
+                        </li>
+                        <li class="bg-white/5 border border-white/5 p-4 rounded-lg flex gap-4 items-center" vid="215">
+                            <div class="w-12 h-16 bg-gray-800 rounded flex-shrink-0 flex items-center justify-center border border-white/10 text-xs text-white/30 font-serif"
+                                vid="216">Book</div>
+                            <div vid="217">
+                                <h4 class="text-sm font-medium text-white/90" vid="218">참을 수 없는 존재의 가벼움</h4>
+                                <p class="text-xs text-gray-500 mt-1" vid="219">밀란 쿤데라</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div class="space-y-4" vid="220">
+                    <h3 class="text-sm tracking-widest text-white/60 uppercase flex items-center gap-2" vid="221">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="222">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                vid="223"></path>
+                        </svg>
+                        Memories
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4" id="modal-memories" vid="224">
+                        <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden relative group" vid="225">
+                            <img src="https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&amp;fit=crop&amp;q=80&amp;w=600"
+                                class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
+                                alt="Gathering" id="modal-memory-img-1" vid="226">
+                        </div>
+                        <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden relative group" vid="227">
+                            <img src="https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&amp;fit=crop&amp;q=80&amp;w=600"
+                                class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
+                                alt="Discussion" id="modal-memory-img-2" vid="228">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="space-y-4" vid="229">
+                    <h3 class="text-sm tracking-widest text-white/60 uppercase flex items-center gap-2" vid="230">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="231">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                vid="232"></path>
+                        </svg>
+                        Journal Entry
+                    </h3>
+                    <div class="bg-black/30 rounded-xl p-6 border border-white/5 relative" vid="233">
+                        <svg class="absolute top-4 left-4 w-6 h-6 text-white/10" fill="currentColor" viewBox="0 0 24 24"
+                            vid="234">
+                            <path
+                                d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"
+                                vid="235"></path>
+                        </svg>
+                        <p class="text-sm text-gray-300 leading-relaxed font-light pl-8 relative z-10"
+                            id="modal-journal" vid="236">
+                            처음 모였던 날의 어색함은 첫 번째 책을 덮을 때 즈음 완전히 사라졌다. 각자의 우주가 충돌하고 융합하며 만들어낸 새로운 생각의 성운들이 우리를 더 넓은 세계로
+                            이끌었다. 완벽하게 이해할 수는 없어도, 기꺼이 들어주려 했던 그 밤들의 기록.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="apply-modal"
+        class="fixed inset-0 bg-black/90 backdrop-blur-xl flex justify-center items-center z-50 transition-all duration-500 opacity-0 pointer-events-none"
+        vid="237">
+
+        <div class="bg-void border border-white/10 w-[90%] md:w-[500px] rounded-2xl p-8 relative transform translate-y-8 transition-transform duration-500"
+            id="apply-modal-content" vid="238">
+
+            <button onclick="closeApplyModal()"
+                class="absolute top-6 right-6 text-white/40 hover:text-white transition-colors p-2 focus:outline-none"
+                vid="239">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="240">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"
+                        vid="241"></path>
+                </svg>
+            </button>
+
+            <div class="text-center mb-8 mt-2" vid="242">
+                <svg class="w-8 h-8 text-white mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    vid="243">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                        vid="244"></path>
+                </svg>
+                <h2 class="text-2xl font-serif text-white tracking-widest" vid="245">JOIN THE DIPPER</h2>
+                <p class="text-xs text-gray-500 mt-2 font-light" vid="246">새로운 별자리의 일원이 되어주세요.</p>
+            </div>
+
+            <form class="space-y-6" onsubmit="event.preventDefault(); alert('신청이 임시 완료되었습니다. (데모)'); closeApplyModal();"
+                vid="247">
+                <div vid="248">
+                    <label class="block text-xs text-white/60 uppercase tracking-widest mb-2" vid="249">Name</label>
+                    <input type="text" required=""
+                        class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-colors placeholder-white/20"
+                        placeholder="이름을 입력해주세요" vid="250">
+                </div>
+                <div vid="251">
+                    <label class="block text-xs text-white/60 uppercase tracking-widest mb-2" vid="252">Contact</label>
+                    <input type="email" required=""
+                        class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-colors placeholder-white/20"
+                        placeholder="연락받으실 이메일" vid="253">
+                </div>
+                <div vid="254">
+                    <label class="block text-xs text-white/60 uppercase tracking-widest mb-2" vid="255">Reason for
+                        applying</label>
+                    <textarea required="" rows="4"
+                        class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-colors placeholder-white/20 resize-none"
+                        placeholder="지원 동기를 자유롭게 적어주세요" vid="256"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-4 text-sm tracking-wide"
+                    vid="257">
+                    신청서 제출
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <script vid="258">
+        const initThreeJS = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1500;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+
+                posArray[i] = (Math.random() - 0.5) * 20;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 16;
+            canvas.height = 16;
+            const context = canvas.getContext('2d');
+            const gradient = context.createRadialGradient(8, 8, 0, 8, 8, 8);
+            gradient.addColorStop(0, 'rgba(255,255,255,1)');
+            gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 16, 16);
+            const particleTexture = new THREE.CanvasTexture(canvas);
+
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                map: particleTexture,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                color: 0x88ccff
+            });
+
+            const particlesMesh = new THREE.Points(particlesGeometry, material);
+            scene.add(particlesMesh);
+
+            camera.position.z = 5;
+
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = event.clientX / window.innerWidth - 0.5;
+                mouseY = event.clientY / window.innerHeight - 0.5;
+            });
+
+            const clock = new THREE.Clock();
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+
+                particlesMesh.rotation.y = elapsedTime * 0.02;
+                particlesMesh.rotation.x = elapsedTime * 0.01;
+
+
+                camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        initThreeJS();
+
+
+        // ==========================================
+        // 1. 최초 로딩 시 화면 진입 및 락 해제 인터랙션
+        // ==========================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const appContainer = document.getElementById('app-container');
+                const heroText = document.getElementById('hero-text');
+
+                // 초기 유령 투명 장벽을 깨끗하게 걷어내어 첫 화면 안착 보장
+                if (appContainer) {
+                    appContainer.classList.remove('opacity-0');
+                    appContainer.style.opacity = '1';
+                }
+
+                // 1초 뒤 타이틀 텍스트가 아래서 위로 부드럽게 팝업 등장
+                setTimeout(() => {
+                    if (heroText) {
+                        heroText.classList.remove('opacity-0', 'translate-y-8');
+                        heroText.classList.add('opacity-100', 'translate-y-0');
+                    }
+                }, 800);
+            }, 300);
+        });
+
+        // ==========================================
+        // 2. 🔥 [수정] 실시간 스크롤 감지 및 블러 '영구 제거' 엔진
+        // ==========================================
+        window.addEventListener('scroll', function scrollHandler() {
+            const appContainer = document.getElementById('app-container');
+            const canvasContainer = document.getElementById('canvas-container');
+
+            // 사용자가 휠 스크롤을 40px 이상 내리기 시작하면 작동
+            if (window.scrollY > 40) {
+                // 1. 본문 컨테이너의 블러와 필터를 완전히 제거 (원상복구)
+                if (appContainer) {
+                    appContainer.style.filter = 'blur(0px)';
+                    appContainer.style.backdropFilter = 'blur(0px)';
+                    appContainer.style.transition = 'all 1.2s cubic-bezier(0.16, 1, 0.3, 1)';
+                }
+
+                // 2. 배경에 깔린 Three.js 3D 별빛 은하수 우주도 100% 진하게 스케일업
+                if (canvasContainer) {
+                    canvasContainer.style.opacity = '1';
+                    canvasContainer.style.transition = 'opacity 1.2s ease-out';
+                }
+
+                // 🎯 [핵심] 한 번 선명해졌다면 스크롤 이벤트를 완전히 제거(삭제)하여 
+                // 다시 위로 올리더라도 블러가 절대 재생성되지 않도록 못을 박습니다.
+                window.removeEventListener('scroll', scrollHandler);
+            }
+        });
+
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
+            observer.observe(el);
+        });
+
+        const blurObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-blur-on-scroll').forEach((el, index) => {
+            const delay = (index % 3) * 150;
+            el.style.transitionDelay = `${delay}ms`;
+            blurObserver.observe(el);
+        });
+
+
+        const magnets = document.querySelectorAll('.magnet-star');
+
+        magnets.forEach(magnet => {
+            magnet.addEventListener('mousemove', (e) => {
+                const rect = magnet.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+
+
+                magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+
+            magnet.addEventListener('mouseleave', () => {
+                magnet.style.transform = 'translate(0px, 0px)';
+                magnet.style.transition = 'transform 0.5s ease';
+            });
+
+            magnet.addEventListener('mouseenter', () => {
+                magnet.style.transition = 'none';
+            });
+        });
+    </script>
+
+
+    <script vid="259">
+        const body = document.body;
+
+
+        const colorMap = {
+            'cyan': 'text-cyan-400 border-cyan-400',
+            'purple': 'text-purple-400 border-purple-400',
+            'pink': 'text-pink-400 border-pink-400',
+            'emerald': 'text-emerald-400 border-emerald-400',
+            'blue': 'text-blue-400 border-blue-400',
+            'rose': 'text-rose-400 border-rose-400',
+            'amber': 'text-amber-400 border-amber-400'
+        };
+
+        const archiveData = {
+            'gen1': {
+                title: '1기 알카이드',
+                date: '25.09.12',
+                colorKey: 'cyan',
+                books: [
+                    { title: '데미안', author: '헤르만 헤세' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'imgs/gen1_1.jpg',
+                    'imgs/gen1_2.jpg'
+                ],
+                journal: `북두칠성 소모임의 첫 기수가 마무리 되었습니다!
+                        특이사항을 제외하면 인원 모집에 기준을 두지 않았기에 다양한 분들이 와주셨어요.
+                        성향에 따라서 조를 구성한 탓인지, 부담스럽지 않지만 확실한 케미가 돋보인 기수였어요.
+                        많은 사람들이 "아~ 그 책!"이라며 반기지만, 완독을 한 사람은 드물다는 바로 그 '데미안'을 시작으로, 조별 자유 선정 도서까지 마무리 했습니다.
+                        데미안은 각자의 삶에 대해 생각해보고 나누기 참 좋은 도서가 되었습니다.
+                        만난지 얼마 안 된 사이지만, 자신의 삶을 이야기하고 타인의 삶에 대해 들어보는 시간이 큰 의미를 가졌습니다.
+                        삶에 대한 공유 이후 선정한 자유도서는 더욱 깊이 있는 통찰이 가능했습니다.
+                        첫 기수이지만, 아마 가장 서로에 대해 깊게 이해한 기수가 되지 않을까 생각됩니다.`
+            },
+            'gen2': {
+                title: '2기 미자르',
+                date: '25.12.28',
+                colorKey: 'purple',
+                books: [
+                    { title: '달과 6펜스', author: '윌리엄 서머싯 몸' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'imgs/gen2_1.jpg',
+                    'imgs/gen2_2.jpg'
+                ],
+                journal: `북두칠성 소모임의 두번째 기수가 마무리 되었습니다.
+                        이번 기수는 첫번째 기수 운영의 노하우를 바탕으로 여러 변화를 주었습니다.
+                        그룹 구성과 미션 진행 그리고 모든 인원이 모이는 세션을 추가했어요. 
+                        또한 구에서 운영하는 청년 소모임 지원 사업에 채택되어 금전적으로(?) 조금 더 윤택한 프로그램을 운영했습니다(책도 나눠드리고! 공간 대여도 자유롭게ㅎㅎ).
+                        이번 기수의 특징은 갈등과 고민에 대해서 다루었다는 점이었습니다.
+                        시간이 지날수록 나를 사로잡는 현실, 그리고 달처럼 멀게만 느껴지는 나의 이상.
+                        누구나 가진 이 고민에 대한 고찰의 시간이었습니다.
+                        졸업을 하고 나면 어떤 삶을 살게 될까, 선택의 순간 지금의 고민이 의미있게 작용하지 않을까 생각합니다.`
+            },
+            'gen3': {
+                title: '3기 알리오스',
+                date: '26.03.10',
+                colorKey: 'pink',
+                books: [
+                    { title: '노르웨이의 숲', author: '무라카미 하루키' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'imgs/gen3_1.jpg',
+                    'imgs/gen3_2.jpg'
+                ],
+                journal: `북두칠성 소모임의 26년 첫 기수가 마무리 되었습니다!
+이번 기수는 그룹 구성에 심혈을 기울였고, 그런만큼 대면 미션을 많이 운영했습니다.
+대면으로 커뮤니케이션을 하다보면, 비대면과는 여러 감각을 통해 소통을 하다보니 다채로운 상호작용이 가능했습니다.
+별 거 아닌 것 같아도, 사소한 부분에서 새로움을 느끼신 분들이 많았다고 해요.
+사람 사이의 거리가 멀어지고 있는 지금의 시대, '노르웨이의 숲(한국에선 상실의 시대로 많이 알려진)'은 많은 주제를 던져주는 책이었습니다.
+다소 우리의 삶과는 거리가 있고, 일부러 생각하기를 피하기도 하는 단어인 죽음에 관한 생각을 해보게 되는 도서였습니다.
+사람이 크게 변화를 하게되는 계기중 하나는 '죽음을 인식할 때'라고 하는데요.
+간접적으로 삶을 바라보는 시점이 변화되는 시간이기도 했습니다.
+앞으로 긴 삶 가운데 겪을 여러 상실을 어떤식으로 마주할 것인가?
+상실을 마주하고 변화하는 과정에 대한 시각을 배우게 됩니다.`
+            },
+            'gen4': {
+                title: '4기 메그레즈',
+                date: '26.06.25 ~',
+                colorKey: 'emerald',
+                books: [
+                    { title: '코스모스', author: '칼 세이건' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600',
+                    'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=600'
+                ],
+                journal: '확장하는 시대의 나의 가치는?'
+            },
+            'gen5': {
+                title: '5기 페크다',
+                date: 'Soon',
+                colorKey: 'blue',
+                books: [
+                    { title: '준비 중인 도서', author: '미정' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=600',
+                    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&q=80&w=600'
+                ],
+                journal: '준비중'
+            },
+            'gen6': {
+                title: '6기 메라크',
+                date: 'Soon',
+                colorKey: 'rose',
+                books: [
+                    { title: '준비 중인 도서', author: '미정' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=600',
+                    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&q=80&w=600'
+                ],
+                journal: '준비중'
+            },
+            'gen7': {
+                title: '7기 두베',
+                date: 'Soon',
+                colorKey: 'amber',
+                books: [
+                    { title: '준비 중인 도서', author: '미정' },
+                    { title: '자유도서+', author: '조별 선정 도서' }
+                ],
+                images: [
+                    'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=600',
+                    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&q=80&w=600'
+                ],
+                journal: '준비중'
+            }
+        };
+
+
+        function openArchiveModal(genKey) {
+            const data = archiveData[genKey];
+            if (!data) return;
+
+            const modal = document.getElementById('archive-modal');
+            const content = document.getElementById('archive-modal-content');
+
+
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-date').textContent = data.date;
+
+
+            const colorLine = document.getElementById('modal-color-line');
+            colorLine.className = 'w-12 h-[2px] mx-auto mt-6 ' + colorMap[data.colorKey].split(' ')[0].replace('text', 'bg');
+
+            // 1. Reading List 동적 치환
+            const readingListUl = document.getElementById('modal-reading-list');
+            readingListUl.innerHTML = '';
+            data.books.forEach(book => {
+                const li = document.createElement('li');
+                li.className = 'bg-white/5 border border-white/5 p-4 rounded-lg flex gap-4 items-center';
+                li.innerHTML = `
+                    <div class="w-12 h-16 bg-gray-800 rounded flex-shrink-0 flex items-center justify-center border border-white/10 text-xs text-white/30 font-serif">Book</div>
+                    <div>
+                        <h4 class="text-sm font-medium text-white/90">${book.title}</h4>
+                        <p class="text-xs text-gray-500 mt-1">${book.author}</p>
+                    </div>
+                `;
+                readingListUl.appendChild(li);
+            });
+
+            // 2. Memories 이미지 동적 치환
+            document.getElementById('modal-memory-img-1').src = data.images[0];
+            document.getElementById('modal-memory-img-2').src = data.images[1];
+
+            // 3. Journal Entry 동적 치환
+            document.getElementById('modal-journal').textContent = data.journal;
+
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+            body.classList.add('modal-open');
+        }
+
+        function closeArchiveModal() {
+            const modal = document.getElementById('archive-modal');
+            const content = document.getElementById('archive-modal-content');
+
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            content.classList.add('scale-95');
+            content.classList.remove('scale-100');
+            body.classList.remove('modal-open');
+        }
+
+
+        function openApplyModal() {
+            window.open('https://docs.google.com/forms/d/e/1FAIpQLSc6Zld8iAFLT-ThjOkBksESopyXm3-HjwC44YA4QoCEfMW6Og/viewform', '_blank');
+        }
+
+        function closeApplyModal() {
+            const modal = document.getElementById('apply-modal');
+            const content = document.getElementById('apply-modal-content');
+
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            content.classList.add('translate-y-8');
+            content.classList.remove('translate-y-0');
+            body.classList.remove('modal-open');
+        }
+
+
+        window.addEventListener('click', (e) => {
+            const archiveModal = document.getElementById('archive-modal');
+            const applyModal = document.getElementById('apply-modal');
+
+            if (e.target === archiveModal) {
+                closeArchiveModal();
+            }
+            if (e.target === applyModal) {
+                closeApplyModal();
+            }
+        });
+
+        // Music Player Controller Logic
+        const bgAudio = document.getElementById('bg-audio');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const audioWave = document.getElementById('audio-wave');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeIcon = document.getElementById('volume-icon');
+        const muteIcon = document.getElementById('mute-icon');
+
+        let isPlaying = false;
+        let isMuted = false;
+        let preMuteVolume = 0.3;
+
+        // Initialize audio settings
+        if (bgAudio) {
+            bgAudio.volume = 0.3;
+        }
+
+        function togglePlay() {
+            if (!bgAudio) return;
+            if (isPlaying) {
+                bgAudio.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                audioWave.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                bgAudio.play().then(() => {
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    audioWave.classList.add('playing');
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("Autoplay prevented:", err);
+                });
+            }
+        }
+
+        function changeVolume(value) {
+            if (!bgAudio) return;
+            const volume = parseFloat(value);
+            bgAudio.volume = volume;
+            if (volume > 0) {
+                isMuted = false;
+                bgAudio.muted = false;
+                volumeIcon.classList.remove('hidden');
+                muteIcon.classList.add('hidden');
+                preMuteVolume = volume;
+            } else {
+                isMuted = true;
+                bgAudio.muted = true;
+                volumeIcon.classList.add('hidden');
+                muteIcon.classList.remove('hidden');
+            }
+        }
+
+        function toggleMute() {
+            if (!bgAudio || !volumeSlider) return;
+            if (isMuted) {
+                isMuted = false;
+                bgAudio.muted = false;
+                bgAudio.volume = preMuteVolume;
+                volumeSlider.value = preMuteVolume;
+                volumeIcon.classList.remove('hidden');
+                muteIcon.classList.add('hidden');
+            } else {
+                preMuteVolume = bgAudio.volume > 0 ? bgAudio.volume : 0.3;
+                isMuted = true;
+                bgAudio.muted = true;
+                bgAudio.volume = 0;
+                volumeSlider.value = 0;
+                volumeIcon.classList.add('hidden');
+                muteIcon.classList.remove('hidden');
+            }
+        }
+
+        // Auto-play attempt on user's first click anywhere on the page
+        document.addEventListener('click', function initAudio() {
+            if (!isPlaying && bgAudio) {
+                bgAudio.play().then(() => {
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    audioWave.classList.add('playing');
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("Interaction autoplay blocked:", err);
+                });
+            }
+            document.removeEventListener('click', initAudio);
+        }, { once: true });
+    </script>
+
+</body>
+
+</html>
