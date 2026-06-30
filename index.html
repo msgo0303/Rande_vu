@@ -338,9 +338,33 @@
 
             <div class="mt-8 flex flex-col items-center transform translate-y-8 opacity-0 transition-all duration-1000 delay-[2000ms] ease-out"
                 id="hero-text" vid="34">
-                <!-- Mascot Image -->
-                <div class="w-28 h-28 md:w-40 md:h-40 mb-6 animate-float-delayed" vid="34-char">
-                    <img src="main_char_1.png" alt="Mascot Character" class="w-full h-full object-contain">
+                <!-- Mascot Image & Speech Bubble Container -->
+                <div class="relative flex flex-col items-center mb-6 animate-float-delayed" id="mascot-container"
+                    vid="34-char-container">
+                    <!-- Speech Bubble -->
+                    <div id="char-speech-bubble"
+                        class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 md:bottom-auto md:mb-0 md:left-full md:ml-6 md:top-1/2 md:-translate-y-1/2 md:translate-x-0 origin-bottom md:origin-left bg-gradient-to-r from-indigo-950/90 to-purple-950/90 backdrop-blur-md border border-purple-500/30 text-white text-xs md:text-sm px-4 py-2.5 rounded-2xl shadow-[0_10px_25px_-5px_rgba(99,102,241,0.3)] opacity-100 scale-100 transition-all duration-300 pointer-events-none select-none w-max max-w-[200px] md:max-w-[280px] z-30"
+                        vid="bubble">
+                        <span id="speech-bubble-text"
+                            class="block font-medium text-purple-100 leading-relaxed text-center md:text-left drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">나를
+                            클릭해봐!</span>
+                        <!-- Bubble Tail (Mobile: pointing down) -->
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-x-[6px] border-x-transparent border-t-[8px] border-t-purple-950/90 md:hidden"
+                            vid="bubble-tail-mobile"></div>
+                        <!-- Bubble Tail (Desktop: pointing left) -->
+                        <div class="absolute right-full top-1/2 -translate-y-1/2 border-y-[6px] border-y-transparent border-r-[8px] border-r-indigo-950/90 hidden md:block"
+                            vid="bubble-tail-desktop"></div>
+                    </div>
+
+                    <!-- Mascot Image -->
+                    <div class="w-28 h-28 md:w-40 md:h-40 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 relative group"
+                        id="mascot-trigger" vid="34-char">
+                        <img src="main_char_1.png" alt="Mascot Character"
+                            class="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                        <div
+                            class="absolute inset-0 rounded-full bg-purple-500/10 scale-0 group-hover:scale-110 group-hover:animate-ping duration-1000">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex items-center gap-6" vid="35">
@@ -827,7 +851,8 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="118">"7개의 독서 미션을
-                                    하나씩 깨는 재미가 있었어요. 낯을 좀 가리는 성격이다보니 낯선 사람과의 대화가 걱정됐는데, 미션을 수행하면서 자연스럽게 대화가 이어지니까 어렵지 않았던 것 같아요!"</p>
+                                    하나씩 깨는 재미가 있었어요. 낯을 좀 가리는 성격이다보니 낯선 사람과의 대화가 걱정됐는데, 미션을 수행하면서 자연스럽게 대화가 이어지니까 어렵지
+                                    않았던 것 같아요!"</p>
                             </div>
                         </div>
 
@@ -852,7 +877,8 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="127">"책만 읽고 끝나는
-                                    게 아니라 서로 다른 학과의 사람들과 커뮤니케이션하면서 시야가 넓어진다는 느낌을 받았어요. 같은 책을 두고 다양하게 비춰본 경험 덕에 오래 기억되는 독서가 될 것 같습니다."</p>
+                                    게 아니라 서로 다른 학과의 사람들과 커뮤니케이션하면서 시야가 넓어진다는 느낌을 받았어요. 같은 책을 두고 다양하게 비춰본 경험 덕에 오래 기억되는
+                                    독서가 될 것 같습니다."</p>
                             </div>
                         </div>
                     </div>
@@ -880,7 +906,8 @@
                                             GEN 2. 미자르</div>
                                     </div>
                                 </div>
-                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="136">"이런 이야기를 주변 친구들이랑 나누기가 쉽지 않은데, 마음 맞는 대학생
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="136">"이런 이야기를 주변
+                                    친구들이랑 나누기가 쉽지 않은데, 마음 맞는 대학생
                                     친구들과 책과 삶에 대해 소통할 수 있는 깊이있는 커뮤니티가 생긴 것 같아요. 커뮤니티 분위기가 따뜻해서 매번 힐링 받고 갑니다."</p>
                             </div>
                         </div>
@@ -906,7 +933,8 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="145">"평소에 책 읽고
-                                    설명하는 걸 정말 좋아하는데, 여기서 제 생각을 말로 표현하고 의견을 주고받으면서 독서의 또다른 재미를 다시 느꼈어요. 이제 맛들려서 혼자 못읽을거같아요."</p>
+                                    설명하는 걸 정말 좋아하는데, 여기서 제 생각을 말로 표현하고 의견을 주고받으면서 독서의 또다른 재미를 다시 느꼈어요. 이제 맛들려서 혼자
+                                    못읽을거같아요."</p>
                             </div>
                         </div>
 
@@ -931,7 +959,8 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="154">"솔직히 처음에는
-                                    미션이 부담스러울 줄 알았는데, 오히려 책을 끝까지 읽는데 도움이 많이 됐어요. 책에서 항상 흥미있는 부분만 읽고 넘겼는데, 완독의 재미를 느끼고 독서 습관도 생겼어요."</p>
+                                    미션이 부담스러울 줄 알았는데, 오히려 책을 끝까지 읽는데 도움이 많이 됐어요. 책에서 항상 흥미있는 부분만 읽고 넘겼는데, 완독의 재미를 느끼고 독서
+                                    습관도 생겼어요."</p>
                             </div>
                         </div>
                     </div>
@@ -1010,7 +1039,9 @@
                                             GEN 3. 알리오스</div>
                                     </div>
                                 </div>
-                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="181">"책을 읽고 싶어서 지원했지만 워낙 낯을 많이 가려서 걱정했어요. 근데 7가지 미션 가이드라인 덕분에 말을 꺼내기가 정말 편했어요. 다른 사람의 생각도 들어보면서 어느샌가 편하게 의견을 전달하는 저 자신을 발견하고 신기하기도 했던 것 같아요."</p>
+                                <p class="text-sm text-gray-400 leading-relaxed font-light italic" vid="181">"책을 읽고 싶어서
+                                    지원했지만 워낙 낯을 많이 가려서 걱정했어요. 근데 7가지 미션 가이드라인 덕분에 말을 꺼내기가 정말 편했어요. 다른 사람의 생각도 들어보면서 어느샌가
+                                    편하게 의견을 전달하는 저 자신을 발견하고 신기하기도 했던 것 같아요."</p>
                             </div>
                         </div>
                     </div>
@@ -1783,6 +1814,43 @@
             }
             document.removeEventListener('click', initAudio);
         }, { once: true });
+
+        // Mascot speech bubble click interaction
+        const mascotTexts = [
+            "너무 잘 왔어! 북두칠성으로 놀러와줘서 고마워.",
+            "유독 밝은 편인 북두칠성은 옛부터 어느 문화권에서나 중요히 여겼다고 해.",
+            "북두칠성은 3억년 전에 형성되었다고 해!",
+            "북두칠성을 이루는 별들은 한자로 천추 천선 춘기 천권 옥형 개양 요광으로 불러.",
+            "난 루멘이야!",
+            "빨리 읽으려면 혼자 읽고, 오래 기억하려면 함께 읽자!"
+        ];
+
+        let lastTextIndex = -1;
+        const speechBubble = document.getElementById('char-speech-bubble');
+        const speechText = document.getElementById('speech-bubble-text');
+        const mascotTrigger = document.getElementById('mascot-trigger');
+
+        if (mascotTrigger && speechBubble && speechText) {
+            mascotTrigger.addEventListener('click', () => {
+                // 마이크로 애니메이션: 톡 튀어나오는 스케일 다운 및 페이드아웃
+                speechBubble.classList.add('opacity-0', 'scale-90');
+                speechBubble.classList.remove('opacity-100', 'scale-100');
+
+                setTimeout(() => {
+                    let nextIndex;
+                    do {
+                        nextIndex = Math.floor(Math.random() * mascotTexts.length);
+                    } while (nextIndex === lastTextIndex && mascotTexts.length > 1);
+
+                    lastTextIndex = nextIndex;
+                    speechText.textContent = mascotTexts[nextIndex];
+
+                    // 페이드인 및 스케일업
+                    speechBubble.classList.remove('opacity-0', 'scale-90');
+                    speechBubble.classList.add('opacity-100', 'scale-100');
+                }, 150);
+            });
+        }
     </script>
 
 </body>
